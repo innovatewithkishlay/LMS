@@ -116,17 +116,29 @@ export const updateProfile = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
         success: false,
+        message: "User not found",
       });
     }
 
     if (user.photoUrl) {
-      deleteMediaFromCloudinary(publicId);
+      const publicId = user.photoUrl.split("/").pop().split(".")[0];
+      await deleteMediaFromCloudinary(publicId);
     }
 
-    const cloudResponse = await uploadMedia(profilePhoto.path);
-    const photoUrl = cloudResponse.secure_url;
+    let photoUrl = user.photoUrl;
+
+    if (profilePhoto) {
+      const cloudResponse = await uploadMedia(profilePhoto.path);
+      if (cloudResponse.secure_url) {
+        photoUrl = cloudResponse.secure_url;
+      } else {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload image",
+        });
+      }
+    }
 
     const updatedData = {};
     if (name) updatedData.name = name;
@@ -144,7 +156,7 @@ export const updateProfile = async (req, res) => {
       message: "Profile updated successfully.",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Profile Update Error:", error);
     return res.status(500).json({
       success: false,
       message: "Failed to update profile",
