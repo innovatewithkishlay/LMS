@@ -45,9 +45,18 @@ const Profile = () => {
 
   const updateUserHandler = async () => {
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("profilePhoto", profilePhoto);
-    await updateUser(formData);
+
+    formData.append("name", name || user.name);
+
+    if (profilePhoto) {
+      formData.append("profilePhoto", profilePhoto);
+    }
+
+    try {
+      await updateUser(formData);
+    } catch (error) {
+      console.error("Profile update failed:", error);
+    }
   };
 
   useEffect(() => {
@@ -69,7 +78,6 @@ const Profile = () => {
   const user = data && data.user;
 
   console.log(user);
-  
 
   return (
     <div className="max-w-4xl mx-auto px-4 my-10">
