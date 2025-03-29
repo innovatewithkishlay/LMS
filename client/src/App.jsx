@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import Login from "./pages/Login";
 import HeroSection from "./pages/student/HeroSection";
 import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/Courses";
@@ -16,11 +15,7 @@ import EditLecture from "./pages/admin/lecture/EditLecture";
 import CourseDetail from "./pages/student/CourseDetail";
 import CourseProgress from "./pages/student/CourseProgress";
 import SearchPage from "./pages/student/SearchPage";
-import {
-  AdminRoute,
-  AuthenticatedUser,
-  ProtectedRoute,
-} from "./components/ProtectedRoutes";
+import { AdminRoute, ProtectedRoute } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/ThemeProvider";
 
@@ -36,14 +31,6 @@ const appRouter = createBrowserRouter([
             <HeroSection />
             <Courses />
           </>
-        ),
-      },
-      {
-        path: "login",
-        element: (
-          <AuthenticatedUser>
-            <Login />
-          </AuthenticatedUser>
         ),
       },
       {
@@ -83,7 +70,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <PurchaseCourseProtectedRoute>
-            <CourseProgress />
+              <CourseProgress />
             </PurchaseCourseProtectedRoute>
           </ProtectedRoute>
         ),
@@ -132,7 +119,7 @@ function App() {
   return (
     <main>
       <ThemeProvider>
-      <RouterProvider router={appRouter} />
+        <RouterProvider router={appRouter} />
       </ThemeProvider>
     </main>
   );

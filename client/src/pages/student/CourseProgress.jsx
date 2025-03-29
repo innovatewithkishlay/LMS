@@ -51,7 +51,7 @@ const CourseProgress = () => {
   const { courseDetails, progress, completed } = data.data;
   const { courseTitle } = courseDetails;
 
-  // initialze the first lecture is not exist
+
   const initialLecture =
     currentLecture || (courseDetails.lectures && courseDetails.lectures[0]);
 

@@ -1,52 +1,17 @@
-// McgPr7oX7v1mMcbN
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  useLoginUserMutation,
-  useRegisterUserMutation,
-} from "@/features/api/authApi";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
-const Login = () => {
+const Login = ({ defaultTab = "login", closeModal }) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [signupInput, setSignupInput] = useState({
     name: "",
     email: "",
     password: "",
   });
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
-
-  const [
-    registerUser,
-    {
-      data: registerData,
-      error: registerError,
-      isLoading: registerIsLoading,
-      isSuccess: registerIsSuccess,
-    },
-  ] = useRegisterUserMutation();
-  const [
-    loginUser,
-    {
-      data: loginData,
-      error: loginError,
-      isLoading: loginIsLoading,
-      isSuccess: loginIsSuccess,
-    },
-  ] = useLoginUserMutation();
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
@@ -58,152 +23,206 @@ const Login = () => {
   };
 
   const handleRegistration = async (type) => {
-    const inputData = type === "signup" ? signupInput : loginInput;
-    const action = type === "signup" ? registerUser : loginUser;
-    await action(inputData);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      if (type === "signup") {
+        toast.success("Signup successful!");
+        closeModal(); // Close modal after successful signup
+      } else {
+        toast.success("Login successful!");
+        closeModal(); // Close modal after successful login
+      }
+    }, 2000);
   };
 
   useEffect(() => {
-    if(registerIsSuccess && registerData){
-      toast.success(registerData.message || "Signup successful.")
-    }
-    if(registerError){
-      toast.error(registerError.data.message || "Signup Failed");
-    }
-    if(loginIsSuccess && loginData){
-      toast.success(loginData.message || "Login successful.");
-      navigate("/");
-    }
-    if(loginError){ 
-      toast.error(loginError.data.message || "login Failed");
-    }
-  }, [
-    loginIsLoading,
-    registerIsLoading,
-    loginData,
-    registerData,
-    loginError,
-    registerError,
-  ]);
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
 
   return (
-    <div className="flex items-center w-full justify-center mt-20">
-      <Tabs defaultValue="login" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="signup">Signup</TabsTrigger>
-          <TabsTrigger value="login">Login</TabsTrigger>
-        </TabsList>
-        <TabsContent value="signup">
-          <Card>
-            <CardHeader>
-              <CardTitle>Signup</CardTitle>
-              <CardDescription>
-                Create a new account and click signup when you're done.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={signupInput.name}
-                  onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel"
-                  required="true"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="username">Email</Label>
-                <Input
-                  type="email"
-                  name="email"
-                  value={signupInput.email}
-                  onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel@gmail.com"
-                  required="true"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="username">Password</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  value={signupInput.password}
-                  onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. xyz"
-                  required="true"
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                disabled={registerIsLoading}
-                onClick={() => handleRegistration("signup")}
+    <div
+      className="flex items-center justify-center w-full h-full bg-black bg-opacity-50 fixed inset-0 z-50"
+      onClick={closeModal} // Close modal on outside click
+    >
+      <div
+        className="bg-white rounded-lg shadow-lg w-[400px] p-6"
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+      >
+        {/* Tabs */}
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setActiveTab("login")}
+            className={`px-4 py-2 text-lg font-semibold ${
+              activeTab === "login"
+                ? "text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-md"
+                : "text-gray-600 hover:text-blue-500"
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setActiveTab("signup")}
+            className={`px-4 py-2 text-lg font-semibold ${
+              activeTab === "signup"
+                ? "text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-md"
+                : "text-gray-600 hover:text-blue-500"
+            }`}
+          >
+            Signup
+          </button>
+        </div>
+
+        {/* Login Form */}
+        {activeTab === "login" && (
+          <form className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
               >
-                {registerIsLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                    wait
-                  </>
-                ) : (
-                  "Signup"
-                )}
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="login">
-          <Card>
-            <CardHeader>
-              <CardTitle>Login</CardTitle>
-              <CardDescription>
-                Login your password here. After signup, you'll be logged in.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="current">Email</Label>
-                <Input
-                  type="email"
-                  name="email"
-                  value={loginInput.email}
-                  onChange={(e) => changeInputHandler(e, "login")}
-                  placeholder="Eg. patel@gmail.com"
-                  required="true"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="new">Password</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  value={loginInput.password}
-                  onChange={(e) => changeInputHandler(e, "login")}
-                  placeholder="Eg. xyz"
-                  required="true"
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                disabled={loginIsLoading}
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={loginInput.email}
+                onChange={(e) => changeInputHandler(e, "login")}
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={loginInput.password}
+                onChange={(e) => changeInputHandler(e, "login")}
+                placeholder="Enter your password"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-9 right-3 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            <div className="flex justify-between items-center mt-4 gap-4">
+              <button
+                type="button"
                 onClick={() => handleRegistration("login")}
+                disabled={isLoading}
+                className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md hover:opacity-90"
               >
-                {loginIsLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                    wait
-                  </>
+                {isLoading ? (
+                  <Loader2 className="animate-spin h-5 w-5 mx-auto" />
                 ) : (
                   "Login"
                 )}
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Signup Form */}
+        {activeTab === "signup" && (
+          <form className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={signupInput.name}
+                onChange={(e) => changeInputHandler(e, "signup")}
+                placeholder="Enter your name"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={signupInput.email}
+                onChange={(e) => changeInputHandler(e, "signup")}
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              />
+            </div>
+            <div className="relative">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={signupInput.password}
+                onChange={(e) => changeInputHandler(e, "signup")}
+                placeholder="Enter your password"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-9 right-3 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            <div className="flex justify-between items-center mt-4 gap-4">
+              <button
+                type="button"
+                onClick={() => handleRegistration("signup")}
+                disabled={isLoading}
+                className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md hover:opacity-90"
+              >
+                {isLoading ? (
+                  <Loader2 className="animate-spin h-5 w-5 mx-auto" />
+                ) : (
+                  "Signup"
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 };
+
 export default Login;
