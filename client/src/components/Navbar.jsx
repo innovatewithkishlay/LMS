@@ -44,17 +44,16 @@ const Navbar = () => {
       {/* Desktop */}
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center px-6 h-full">
         <motion.div
-          className="flex items-center gap-3"
+          className="flex items-center gap-3 cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
+          onClick={() => navigate("/")} // Navigate to home page on click
         >
           <School size={30} className="text-blue-600 dark:text-blue-400" />
-          <Link to="/">
-            <h1 className="font-extrabold text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-              V-Learning
-            </h1>
-          </Link>
+          <h1 className="font-extrabold text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+            V-Learning
+          </h1>
         </motion.div>
         <div className="flex items-center gap-6">
           {user ? (
@@ -74,7 +73,7 @@ const Navbar = () => {
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
                   <DropdownMenuLabel className="text-gray-700 dark:text-gray-300 font-semibold text-lg px-4 py-2">
@@ -119,10 +118,21 @@ const Navbar = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              <Button variant="outline" onClick={() => navigate("/login")}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
                 Login
               </Button>
-              <Button onClick={() => navigate("/signup")}>Signup</Button>
+              <Button
+                onClick={() => {
+                  navigate("/signup");
+                }}
+              >
+                Signup
+              </Button>
             </motion.div>
           )}
           <DarkMode />
@@ -132,10 +142,11 @@ const Navbar = () => {
       {/* Mobile */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <motion.h1
-          className="font-extrabold text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text"
+          className="font-extrabold text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
+          onClick={() => navigate("/")} // Navigate to home page on click
         >
           V-Learning
         </motion.h1>
@@ -151,10 +162,40 @@ const MobileNavbar = ({ user, logoutHandler }) => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      {/* Mobile Navbar Content */}
-      <Button onClick={() => navigate("/login")}>Login</Button>
-      <Button onClick={() => navigate("/signup")}>Signup</Button>
+    <div className="flex items-center gap-4">
+      {user ? (
+        <>
+          {/* User Avatar */}
+          <Avatar>
+            <AvatarImage
+              src={user?.photoUrl || "https://github.com/shadcn.png"}
+              alt="User Avatar"
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </>
+      ) : (
+        <>
+          {/* Login and Signup Buttons */}
+          <Button
+            variant="outline"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Login
+          </Button>
+          <Button
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
+            Signup
+          </Button>
+        </>
+      )}
+      {/* Dark Mode Toggle */}
+      <DarkMode />
     </div>
   );
 };

@@ -14,8 +14,8 @@ import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import React from "react";
 import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingSpinner from "@/components/LoadingSpinner"; // Import the updated spinner
-import { motion } from "framer-motion"; // Import Framer Motion
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { motion } from "framer-motion";
 
 const CourseDetail = () => {
   const params = useParams();
@@ -24,7 +24,6 @@ const CourseDetail = () => {
   const { data, isLoading, isError } =
     useGetCourseDetailWithStatusQuery(courseId);
 
-  // Use the updated LoadingSpinner component
   if (isLoading) return <LoadingSpinner />;
 
   if (isError || !data || !data.course)
@@ -46,7 +45,7 @@ const CourseDetail = () => {
 
   return (
     <motion.div
-      className="space-y-5"
+      className="space-y-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
@@ -54,72 +53,105 @@ const CourseDetail = () => {
     >
       {/* Header Section */}
       <motion.div
-        className="bg-[#2D2F31] dark:bg-gray-900 text-white dark:text-gray-100"
+        className="bg-gradient-to-r from-blue-500 to-blue-700 text-white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
       >
-        <div className="max-w-7xl mx-auto py-8 px-4 md:px-8 flex flex-col gap-2">
-          <h1 className="font-bold text-2xl md:text-3xl">
-            {course?.courseTitle || "No Title Available"}
-          </h1>
-          <p className="text-base md:text-lg">
-            {course?.subTitle || "No Subtitle Available"}
-          </p>
-
-          <p>
-            Created By{" "}
-            <span className="text-[#C0C4FC] dark:text-blue-400 underline italic">
-              {course?.creator?.name || "Unknown Creator"}
-            </span>
-          </p>
-          <div className="flex items-center gap-2 text-sm">
-            <BadgeInfo size={16} />
-            <p>Last updated {course?.createdAt?.split("T")[0] || "N/A"}</p>
+        <div className="max-w-7xl mx-auto py-10 px-6 md:px-8 flex flex-col gap-6">
+          <div>
+            <h2 className="text-sm font-medium uppercase tracking-wide text-gray-300">
+              Title
+            </h2>
+            <h1 className="font-bold text-3xl md:text-4xl text-yellow-300">
+              {course?.courseTitle || "No Title Available"}
+            </h1>
           </div>
-          <p>Students enrolled: {course?.enrolledStudents?.length || 0}</p>
+
+          <div>
+            <h2 className="text-sm font-medium uppercase tracking-wide text-gray-300">
+              Subtitle
+            </h2>
+            <p className="text-lg md:text-xl text-yellow-300">
+              {course?.subTitle || "No Subtitle Available"}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h2 className="text-sm font-medium uppercase tracking-wide text-gray-300">
+                Created By
+              </h2>
+              <p className="text-base text-yellow-300">
+                <span className="underline italic">
+                  {course?.creator?.name || "Unknown Creator"}
+                </span>
+              </p>
+            </div>
+            <div>
+              <h2 className="text-sm font-medium uppercase tracking-wide text-gray-300">
+                Last Updated
+              </h2>
+              <p className="text-base text-yellow-300">
+                {course?.createdAt?.split("T")[0] || "N/A"}
+              </p>
+            </div>
+            <div>
+              <h2 className="text-sm font-medium uppercase tracking-wide text-gray-300">
+                Students Enrolled
+              </h2>
+              <p className="text-base font-semibold text-yellow-300">
+                {course?.enrolledStudents?.length || 0}
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
 
       {/* Main Content Section */}
-      <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
         {/* Left Section */}
         <motion.div
-          className="w-full lg:w-1/2 space-y-5"
+          className="w-full lg:w-2/3 space-y-6"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
-          <h1 className="font-bold text-xl md:text-2xl">Description</h1>
-          <p
-            className="text-sm text-gray-700 dark:text-gray-300"
-            dangerouslySetInnerHTML={{
-              __html: course?.description || "No description available.",
-            }}
-          />
-          <Card className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow">
+          <Card className="transition-shadow">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">
-                Course Content
-              </CardTitle>
+              <CardTitle>Description</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p
+                className="text-sm md:text-base text-gray-700 dark:text-gray-300"
+                dangerouslySetInnerHTML={{
+                  __html: course?.description || "No description available.",
+                }}
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Course Content</CardTitle>
               <CardDescription>
-                {course?.lectures?.length || 0} lectures
+                {course?.lectures?.length || 0} Lectures
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
               {course?.lectures?.map((lecture, idx) => (
                 <motion.div
                   key={idx}
-                  className="flex items-center gap-3 text-sm"
+                  className="flex items-center gap-4 text-sm md:text-base"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.1, duration: 0.4 }}
                 >
                   <span>
                     {true ? (
-                      <PlayCircle size={14} className="text-blue-500" />
+                      <PlayCircle size={20} className="text-blue-500" />
                     ) : (
-                      <Lock size={14} className="text-gray-500" />
+                      <Lock size={20} className="text-gray-500" />
                     )}
                   </span>
                   <p className="text-gray-800 dark:text-gray-200">
@@ -138,9 +170,9 @@ const CourseDetail = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
-          <Card className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow">
-            <CardContent className="p-4 flex flex-col">
-              <div className="w-full aspect-video mb-4">
+          <Card>
+            <CardContent className="p-6 flex flex-col items-center">
+              <div className="w-full aspect-video mb-6">
                 <ReactPlayer
                   width="100%"
                   height={"100%"}
@@ -151,12 +183,12 @@ const CourseDetail = () => {
               <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {course?.lectures?.[0]?.lectureTitle || "Lecture Title"}
               </h1>
-              <Separator className="my-2" />
-              <h1 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">
+              <Separator className="my-4" />
+              <h1 className="text-xl font-bold text-gray-800 dark:text-gray-200">
                 ₹{course?.price || "Free"}
               </h1>
             </CardContent>
-            <CardFooter className="flex justify-center p-4">
+            <CardFooter>
               {purchased ? (
                 <Button
                   onClick={handleContinueCourse}
