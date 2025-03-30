@@ -70,17 +70,20 @@ const HeroSection = () => {
           </Button>
         </motion.form>
 
-        {/* Explore Courses Button */}
+        {/* Explore Courses Button with Animated Line */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 1 }}
+          className="relative flex items-center justify-center mt-6"
         >
           <Button
             onClick={() => navigate(`/course/search?query`)}
-            className="bg-gradient-to-r from-blue-600 to-purple-700 text-white px-8 py-4 rounded-full hover:shadow-lg hover:opacity-90 transition-all duration-300 text-lg font-semibold"
+            className="relative bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-4 rounded-full hover:shadow-lg hover:opacity-90 transition-all duration-300 text-lg font-semibold z-10 overflow-hidden"
           >
             Explore Courses
+            {/* Animated Line */}
+            <span className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-green-400 to-teal-500 animate-slide"></span>
           </Button>
         </motion.div>
       </motion.div>
