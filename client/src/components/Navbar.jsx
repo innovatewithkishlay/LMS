@@ -68,30 +68,44 @@ const Navbar = () => {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" asChild>
+              <DropdownMenuContent
+                className="w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+                asChild
+              >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-gray-700 dark:text-gray-300 font-semibold text-lg px-4 py-2">
+                    My Account
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="border-gray-300 dark:border-gray-700" />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                      <Link to="/my-learning">My Learning</Link>
+                    <DropdownMenuItem className="hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-all">
+                      <Link to="/my-learning" className="w-full">
+                        My Learning
+                      </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link to="/profile">Edit Profile</Link>
+                    <DropdownMenuItem className="hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-all">
+                      <Link to="/profile" className="w-full">
+                        Edit Profile
+                      </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={logoutHandler}>
+                    <DropdownMenuItem
+                      onClick={logoutHandler}
+                      className="hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-600 dark:hover:text-red-200 px-4 py-2 rounded-md transition-all"
+                    >
                       Log out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   {user?.role === "instructor" && (
                     <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Link to="/admin/dashboard">Dashboard</Link>
+                      <DropdownMenuSeparator className="border-gray-300 dark:border-gray-700" />
+                      <DropdownMenuItem className="hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-all">
+                        <Link to="/admin/dashboard" className="w-full">
+                          Dashboard
+                        </Link>
                       </DropdownMenuItem>
                     </>
                   )}
