@@ -59,12 +59,19 @@ const Navbar = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar>
-                  <AvatarImage
-                    src={user?.photoUrl || "https://github.com/shadcn.png"}
-                    alt="User Avatar"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
+                <Avatar
+                  className="cursor-pointer"
+                  key={user.photoUrl || "default-avatar"}
+                >
+                  {user?.photoUrl ? (
+                    <AvatarImage
+                      src={user.photoUrl}
+                      alt="User Avatar"
+                      className="w-12 h-12 rounded-full object-cover" // Larger size for desktop
+                    />
+                  ) : (
+                    <AvatarFallback size="laptop" /> // Larger fallback for desktop
+                  )}
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -73,7 +80,7 @@ const Navbar = () => {
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
                   <DropdownMenuLabel className="text-gray-700 dark:text-gray-300 font-semibold text-lg px-4 py-2">
@@ -164,19 +171,69 @@ const MobileNavbar = ({ user, logoutHandler }) => {
   return (
     <div className="flex items-center gap-4">
       {user ? (
-        <>
-          {/* User Avatar */}
-          <Avatar>
-            <AvatarImage
-              src={user?.photoUrl || "https://github.com/shadcn.png"}
-              alt="User Avatar"
-            />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="cursor-pointer" key={user.photoUrl}>
+              {user?.photoUrl ? (
+                <AvatarImage
+                  src={user.photoUrl}
+                  alt="User Avatar"
+                  className="w-10 h-10 rounded-full object-cover" // Smaller size for mobile
+                />
+              ) : (
+                <AvatarFallback size="mobile" /> // Smaller fallback for mobile
+              )}
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+            asChild
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DropdownMenuLabel className="text-gray-700 dark:text-gray-300 font-semibold text-lg px-4 py-2">
+                My Account
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="border-gray-300 dark:border-gray-700" />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-all"
+                  onClick={() => navigate("/my-learning")}
+                >
+                  My Learning
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-all"
+                  onClick={() => navigate("/profile")}
+                >
+                  Edit Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-600 dark:hover:text-red-200 px-4 py-2 rounded-md transition-all"
+                  onClick={logoutHandler}
+                >
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              {user?.role === "instructor" && (
+                <>
+                  <DropdownMenuSeparator className="border-gray-300 dark:border-gray-700" />
+                  <DropdownMenuItem
+                    className="hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-all"
+                    onClick={() => navigate("/admin/dashboard")}
+                  >
+                    Dashboard
+                  </DropdownMenuItem>
+                </>
+              )}
+            </motion.div>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <>
-          {/* Login and Signup Buttons */}
           <Button
             variant="outline"
             onClick={() => {
@@ -194,7 +251,6 @@ const MobileNavbar = ({ user, logoutHandler }) => {
           </Button>
         </>
       )}
-      {/* Dark Mode Toggle */}
       <DarkMode />
     </div>
   );

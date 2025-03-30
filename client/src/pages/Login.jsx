@@ -66,7 +66,7 @@ const Login = () => {
   useEffect(() => {
     if (registerIsSuccess && registerData) {
       toast.success(registerData.message || "Signup successful.");
-      const redirectTo = location.state?.from || "/";
+      const redirectTo = location.state?.from || "/"; // Redirect to the previous page or home
       navigate(redirectTo);
     }
     if (registerError) {
@@ -74,7 +74,7 @@ const Login = () => {
     }
     if (loginIsSuccess && loginData) {
       toast.success(loginData.message || "Login successful.");
-      const redirectTo = location.state?.from || "/";
+      const redirectTo = location.state?.from || "/"; // Redirect to the previous page or home
       navigate(redirectTo);
     }
     if (loginError) {
