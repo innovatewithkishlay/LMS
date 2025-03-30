@@ -2,41 +2,89 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const searchHandler = (e) => {
     e.preventDefault();
-    if(searchQuery.trim() !== ""){
-      navigate(`/course/search?query=${searchQuery}`)
+    if (searchQuery.trim() !== "") {
+      navigate(`/course/search?query=${searchQuery}`);
     }
     setSearchQuery("");
-  }
+  };
 
   return (
-    <div className="relative bg-gradient-to-r from-blue-500 to bg-indigo-600 dark:from-gray-800 dark:to-gray-900 py-24 px-4 text-center">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-white text-4xl font-bold mb-4">
-          Find the Best Courses for You
-        </h1>
-        <p className="text-gray-200 dark:text-gray-400 mb-8">
-          Discover, Learn, and Upskill with our wide range of courses
-        </p>
+    <motion.div
+      className="relative bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-gray-800 dark:to-gray-900 py-24 px-4 text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <motion.div
+        className="max-w-3xl mx-auto"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <motion.h1
+          className="text-white text-5xl font-extrabold mb-6 leading-tight"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          Unlock Your Potential with the Best Courses
+        </motion.h1>
+        <motion.p
+          className="text-gray-200 dark:text-gray-400 text-lg mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          Explore a world of knowledge, master new skills, and achieve your
+          goals with our expertly curated courses.
+        </motion.p>
 
-        <form onSubmit={searchHandler} className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6">
+        {/* Search Box */}
+        <motion.form
+          onSubmit={searchHandler}
+          className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-8 border border-gray-300 dark:border-gray-700"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
           <Input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Courses"
-            className="flex-grow border-none focus-visible:ring-0 px-6 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+            placeholder="Search for courses..."
+            className="flex-grow border-none focus-visible:ring-0 px-6 py-4 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 caret-blue-600 text-lg"
           />
-          <Button type="submit" className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-r-full hover:bg-blue-700 dark:hover:bg-blue-800">Search</Button>
-        </form>
-       <Button onClick={()=> navigate(`/course/search?query`)} className="bg-white dark:bg-gray-800 text-blue-600 rounded-full hover:bg-gray-200">Explore Courses</Button>
-      </div>
-    </div>
+          <Button
+            type="submit"
+            className="bg-gradient-to-r from-blue-600 to-purple-700 text-white px-8 py-4 rounded-r-full hover:opacity-90 transition-all duration-300 text-lg font-semibold shadow-md"
+          >
+            Search Courses
+          </Button>
+        </motion.form>
+
+        {/* Explore Courses Button */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 1 }}
+        >
+          <Button
+            onClick={() => navigate(`/course/search?query`)}
+            className="bg-gradient-to-r from-blue-600 to-purple-700 text-white px-8 py-4 rounded-full hover:shadow-lg hover:opacity-90 transition-all duration-300 text-lg font-semibold"
+          >
+            Explore Courses
+          </Button>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 
