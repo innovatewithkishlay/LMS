@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -15,6 +15,22 @@ const HeroSection = () => {
     }
     setSearchQuery("");
   };
+
+  // Dynamically set placeholder based on screen size
+  const [placeholder, setPlaceholder] = useState("Search for courses...");
+  useEffect(() => {
+    const updatePlaceholder = () => {
+      if (window.innerWidth <= 768) {
+        setPlaceholder("Search...");
+      } else {
+        setPlaceholder("Search for courses...");
+      }
+    };
+
+    updatePlaceholder();
+    window.addEventListener("resize", updatePlaceholder);
+    return () => window.removeEventListener("resize", updatePlaceholder);
+  }, []);
 
   return (
     <motion.div
@@ -59,8 +75,8 @@ const HeroSection = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for courses..."
-            className="flex-grow border-none focus-visible:ring-0 px-6 py-4 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 caret-blue-600 text-lg"
+            placeholder={placeholder} // Dynamic placeholder
+            className="flex-grow border-none focus-visible:ring-0 px-6 py-4 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 caret-blue-600 text-lg blinking-cursor" // Added blinking cursor class
           />
           <Button
             type="submit"

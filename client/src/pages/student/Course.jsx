@@ -54,6 +54,9 @@ const Course = ({ course }) => {
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {course.creator?.role || "Instructor"}
                 </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+                  {course.creator?.name || "Unknown Instructor"}
+                </p>
               </div>
             </div>
 
