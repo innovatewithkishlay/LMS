@@ -14,6 +14,8 @@ import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import React from "react";
 import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingSpinner from "@/components/LoadingSpinner"; // Import the updated spinner
+import { motion } from "framer-motion"; // Import Framer Motion
 
 const CourseDetail = () => {
   const params = useParams();
@@ -22,13 +24,8 @@ const CourseDetail = () => {
   const { data, isLoading, isError } =
     useGetCourseDetailWithStatusQuery(courseId);
 
-  // Centered loader
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <h1 className="text-xl font-semibold">Loading...</h1>
-      </div>
-    );
+  // Use the updated LoadingSpinner component
+  if (isLoading) return <LoadingSpinner />;
 
   if (isError || !data || !data.course)
     return (
@@ -48,8 +45,20 @@ const CourseDetail = () => {
   };
 
   return (
-    <div className="space-y-5">
-      <div className="bg-[#2D2F31] text-white">
+    <motion.div
+      className="space-y-5"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
+      {/* Header Section */}
+      <motion.div
+        className="bg-[#2D2F31] dark:bg-gray-900 text-white dark:text-gray-100"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+      >
         <div className="max-w-7xl mx-auto py-8 px-4 md:px-8 flex flex-col gap-2">
           <h1 className="font-bold text-2xl md:text-3xl">
             {course?.courseTitle || "No Title Available"}
@@ -60,7 +69,7 @@ const CourseDetail = () => {
 
           <p>
             Created By{" "}
-            <span className="text-[#C0C4FC] underline italic">
+            <span className="text-[#C0C4FC] dark:text-blue-400 underline italic">
               {course?.creator?.name || "Unknown Creator"}
             </span>
           </p>
@@ -70,37 +79,66 @@ const CourseDetail = () => {
           </div>
           <p>Students enrolled: {course?.enrolledStudents?.length || 0}</p>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Main Content Section */}
       <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
-        <div className="w-full lg:w-1/2 space-y-5">
+        {/* Left Section */}
+        <motion.div
+          className="w-full lg:w-1/2 space-y-5"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+        >
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
           <p
-            className="text-sm"
+            className="text-sm text-gray-700 dark:text-gray-300"
             dangerouslySetInnerHTML={{
               __html: course?.description || "No description available.",
             }}
           />
-          <Card>
+          <Card className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow">
             <CardHeader>
-              <CardTitle>Course Content</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                Course Content
+              </CardTitle>
               <CardDescription>
                 {course?.lectures?.length || 0} lectures
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {course?.lectures?.map((lecture, idx) => (
-                <div key={idx} className="flex items-center gap-3 text-sm">
+                <motion.div
+                  key={idx}
+                  className="flex items-center gap-3 text-sm"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1, duration: 0.4 }}
+                >
                   <span>
-                    {true ? <PlayCircle size={14} /> : <Lock size={14} />}
+                    {true ? (
+                      <PlayCircle size={14} className="text-blue-500" />
+                    ) : (
+                      <Lock size={14} className="text-gray-500" />
+                    )}
                   </span>
-                  <p>{lecture?.lectureTitle || "Untitled Lecture"}</p>
-                </div>
+                  <p className="text-gray-800 dark:text-gray-200">
+                    {lecture?.lectureTitle || "Untitled Lecture"}
+                  </p>
+                </motion.div>
               ))}
             </CardContent>
           </Card>
-        </div>
-        <div className="w-full lg:w-1/3">
-          <Card>
+        </motion.div>
+
+        {/* Right Section */}
+        <motion.div
+          className="w-full lg:w-1/3"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+        >
+          <Card className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow">
             <CardContent className="p-4 flex flex-col">
               <div className="w-full aspect-video mb-4">
                 <ReactPlayer
@@ -110,13 +148,20 @@ const CourseDetail = () => {
                   controls={true}
                 />
               </div>
-              <h1>Lecture title</h1>
+              <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                {course?.lectures?.[0]?.lectureTitle || "Lecture Title"}
+              </h1>
               <Separator className="my-2" />
-              <h1 className="text-lg md:text-xl font-semibold">Course Price</h1>
+              <h1 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200">
+                ₹{course?.price || "Free"}
+              </h1>
             </CardContent>
             <CardFooter className="flex justify-center p-4">
               {purchased ? (
-                <Button onClick={handleContinueCourse} className="w-full">
+                <Button
+                  onClick={handleContinueCourse}
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                >
                   Continue Course
                 </Button>
               ) : (
@@ -124,9 +169,9 @@ const CourseDetail = () => {
               )}
             </CardFooter>
           </Card>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
