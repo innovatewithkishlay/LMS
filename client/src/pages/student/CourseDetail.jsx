@@ -22,11 +22,24 @@ const CourseDetail = () => {
   const { data, isLoading, isError } =
     useGetCourseDetailWithStatusQuery(courseId);
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <h>Failed to load course details</h>;
+  // Centered loader
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-xl font-semibold">Loading...</h1>
+      </div>
+    );
+
+  if (isError || !data || !data.course)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-xl font-semibold">
+          Course not found or an error occurred.
+        </h1>
+      </div>
+    );
 
   const { course, purchased } = data;
-  console.log(purchased);
 
   const handleContinueCourse = () => {
     if (purchased) {
@@ -39,7 +52,7 @@ const CourseDetail = () => {
       <div className="bg-[#2D2F31] text-white">
         <div className="max-w-7xl mx-auto py-8 px-4 md:px-8 flex flex-col gap-2">
           <h1 className="font-bold text-2xl md:text-3xl">
-            {course?.courseTitle}
+            {course?.courseTitle || "No Title Available"}
           </h1>
           <p className="text-base md:text-lg">
             {course?.subTitle || "No Subtitle Available"}
@@ -48,14 +61,14 @@ const CourseDetail = () => {
           <p>
             Created By{" "}
             <span className="text-[#C0C4FC] underline italic">
-              {course?.creator.name}
+              {course?.creator?.name || "Unknown Creator"}
             </span>
           </p>
           <div className="flex items-center gap-2 text-sm">
             <BadgeInfo size={16} />
-            <p>Last updated {course?.createdAt.split("T")[0]}</p>
+            <p>Last updated {course?.createdAt?.split("T")[0] || "N/A"}</p>
           </div>
-          <p>Students enrolled: {course?.enrolledStudents.length}</p>
+          <p>Students enrolled: {course?.enrolledStudents?.length || 0}</p>
         </div>
       </div>
       <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
@@ -63,20 +76,24 @@ const CourseDetail = () => {
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
           <p
             className="text-sm"
-            dangerouslySetInnerHTML={{ __html: course.description }}
+            dangerouslySetInnerHTML={{
+              __html: course?.description || "No description available.",
+            }}
           />
           <Card>
             <CardHeader>
               <CardTitle>Course Content</CardTitle>
-              <CardDescription>4 lectures</CardDescription>
+              <CardDescription>
+                {course?.lectures?.length || 0} lectures
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {course.lectures.map((lecture, idx) => (
+              {course?.lectures?.map((lecture, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-sm">
                   <span>
                     {true ? <PlayCircle size={14} /> : <Lock size={14} />}
                   </span>
-                  <p>{lecture.lectureTitle}</p>
+                  <p>{lecture?.lectureTitle || "Untitled Lecture"}</p>
                 </div>
               ))}
             </CardContent>
@@ -89,7 +106,7 @@ const CourseDetail = () => {
                 <ReactPlayer
                   width="100%"
                   height={"100%"}
-                  url={course.lectures[0].videoUrl}
+                  url={course?.lectures?.[0]?.videoUrl || ""}
                   controls={true}
                 />
               </div>
