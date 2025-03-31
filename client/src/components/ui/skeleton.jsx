@@ -27,4 +27,36 @@ function Skeleton({ className, ...props }) {
   );
 }
 
-export { Skeleton };
+function SearchResultSkeleton() {
+  return (
+    <div className="bg-white shadow-md rounded-lg overflow-hidden w-[340px] h-[440px] mx-auto">
+      {/* Skeleton for Image */}
+      <div className="w-full h-44 bg-gray-200">
+        <Skeleton className="h-full w-full" />
+      </div>
+
+      {/* Skeleton for Card Content */}
+      <div className="p-4 flex flex-col justify-between h-full">
+        {/* Skeleton for Title */}
+        <Skeleton className="h-6 w-3/4 mb-2" />
+
+        {/* Skeleton for Subtitle */}
+        <Skeleton className="h-4 w-2/3 mb-4" />
+
+        {/* Skeleton for Instructor Name */}
+        <Skeleton className="h-4 w-1/2 mb-4" />
+
+        {/* Skeleton for Difficulty Badge */}
+        <Skeleton className="h-6 w-20 mb-4" />
+
+        {/* Skeleton for Price and Button */}
+        <div className="flex items-center justify-between mt-4">
+          <Skeleton className="h-6 w-16" />
+          <Skeleton className="h-8 w-24 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export { Skeleton, SearchResultSkeleton };
