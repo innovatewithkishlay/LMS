@@ -54,7 +54,6 @@ const Filter = ({ handleFilterChange }) => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
     >
-      {/* Filter Header */}
       <motion.div
         className="flex items-center justify-between mb-4"
         initial={{ opacity: 0, y: -10 }}
@@ -80,7 +79,6 @@ const Filter = ({ handleFilterChange }) => {
 
       <Separator className="my-3" />
 
-      {/* Category Filters */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

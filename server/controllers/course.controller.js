@@ -35,42 +35,68 @@ export const createCourse = async (req, res) => {
 
 export const searchCourse = async (req, res) => {
   try {
-    const { query = "", categories = [], sortByPrice = "" } = req.query;
-    console.log(categories);
+    const { query = "", categories = "", sortByPrice = "" } = req.query;
 
-    // create search query
+    console.log("Query:", query);
+    console.log("Categories:", categories);
+
+    const categoryArray = Array.isArray(categories)
+      ? categories
+      : categories.split(",").map((cat) => cat.trim());
+
     const searchCriteria = {
       isPublished: true,
-      $or: [
-        { courseTitle: { $regex: query, $options: "i" } },
-        { subTitle: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } },
-      ],
     };
 
-    // if categories selected
-    if (categories.length > 0) {
-      searchCriteria.category = { $in: categories };
+    if (query) {
+      searchCriteria.$or = [
+        { courseTitle: { $regex: query, $options: "i" } },
+        { subTitle: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ];
     }
 
-    // define sorting order
+    if (categoryArray.length > 0) {
+      searchCriteria.$or = searchCriteria.$or || [];
+      categoryArray.forEach((category) => {
+        searchCriteria.$or.push(
+          { courseTitle: { $regex: category, $options: "i" } },
+          { subTitle: { $regex: category, $options: "i" } },
+          { description: { $regex: category, $options: "i" } },
+          { category: { $regex: category, $options: "i" } }
+        );
+      });
+    }
+
     const sortOptions = {};
     if (sortByPrice === "low") {
-      sortOptions.coursePrice = 1; //sort by price in ascending
+      sortOptions.coursePrice = 1;
     } else if (sortByPrice === "high") {
-      sortOptions.coursePrice = -1; // descending
+      sortOptions.coursePrice = -1;
     }
 
-    let courses = await Course.find(searchCriteria)
+    const courses = await Course.find(searchCriteria)
       .populate({ path: "creator", select: "name photoUrl" })
       .sort(sortOptions);
 
+    if (courses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No courses found matching your criteria.",
+      });
+    }
+
     return res.status(200).json({
       success: true,
-      courses: courses || [],
+      courses,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error in searchCourse:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while searching for courses.",
+    });
   }
 };
 
