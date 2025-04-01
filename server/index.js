@@ -11,16 +11,14 @@ import courseProgressRoute from "./routes/courseProgress.route.js";
 
 dotenv.config({});
 
-// call database connection here
+// Call database connection here
 connectDB();
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// default middleware
-app.use(express.json());
+// Default middleware
 app.use(cookieParser());
-
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -28,13 +26,23 @@ app.use(
   })
 );
 
-// apis
+// Apply express.json() globally for all routes except /webhook
+app.use((req, res, next) => {
+  if (req.originalUrl === "/api/v1/purchase/webhook") {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
+// APIs
 app.use("/api/v1/media", mediaRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/purchase", purchaseRoute);
 app.use("/api/v1/progress", courseProgressRoute);
 
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server listen at port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

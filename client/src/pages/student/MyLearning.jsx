@@ -2,8 +2,8 @@ import React from "react";
 import Course from "./Course";
 import { useLoadUserQuery } from "@/features/api/authApi";
 
-const MyLearning = () => { 
-  const {data, isLoading} = useLoadUserQuery();
+const MyLearning = () => {
+  const { data, isLoading } = useLoadUserQuery();
 
   const myLearning = data?.user.enrolledCourses || [];
   return (
@@ -17,7 +17,7 @@ const MyLearning = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {myLearning.map((course, index) => (
-              <Course key={index} course={course}/>
+              <Course key={index} course={course} />
             ))}
           </div>
         )}
