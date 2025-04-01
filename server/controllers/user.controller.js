@@ -163,3 +163,49 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
+
+export const createTeacher = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and password are required.",
+      });
+    }
+
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User with this email already exists.",
+      });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create the teacher user
+    const teacher = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role: "instructor", // Set the role to instructor
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Teacher created successfully.",
+      teacher,
+    });
+  } catch (error) {
+    console.error("Error creating teacher:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create teacher.",
+    });
+  }
+};
