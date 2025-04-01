@@ -69,8 +69,9 @@ const Profile = () => {
 
   return (
     <div className="relative bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-gray-800 dark:via-gray-700 dark:to-gray-900 min-h-screen py-10">
+      {/* Profile Header */}
       <motion.div
-        className="max-w-5xl mx-auto text-center text-white dark:text-gray-100"
+        className="max-w-5xl mx-auto text-center text-white dark:text-gray-100 px-4"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -81,6 +82,7 @@ const Profile = () => {
         </p>
       </motion.div>
 
+      {/* Profile Details */}
       <motion.div
         className="max-w-5xl mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8"
         initial={{ opacity: 0, y: 50 }}
@@ -88,13 +90,37 @@ const Profile = () => {
         transition={{ duration: 0.8, delay: 0.2 }}
       >
         <div className="flex flex-col md:flex-row items-center gap-8">
-          <Avatar className="h-32 w-32 shadow-lg">
-            <AvatarImage
-              src={user?.photoUrl || "https://via.placeholder.com/150"}
-              alt="User Avatar"
-            />
-            <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-          </Avatar>
+          {/* Avatar */}
+          <div className="flex items-center justify-center">
+            {user?.photoUrl ? (
+              // Display the user image without a circle
+              <img
+                src={user.photoUrl}
+                alt="User Avatar"
+                className="h-32 w-32 object-cover rounded-lg shadow-lg"
+              />
+            ) : (
+              // Display a default user icon if no image is available
+              <div className="h-32 w-32 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-16 w-16 text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12zM12 14.25c-3.315 0-6 2.685-6 6v.75h12v-.75c0-3.315-2.685-6-6-6z"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
+
+          {/* User Info */}
           <div className="flex-1">
             <div className="mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -120,6 +146,8 @@ const Profile = () => {
                 </span>
               </h2>
             </div>
+
+            {/* Edit Profile Dialog */}
             <Dialog>
               <DialogTrigger asChild>
                 <Button className="bg-blue-600 text-white hover:bg-blue-700">
@@ -164,7 +192,7 @@ const Profile = () => {
                       Profile Photo
                     </Label>
                     <div className="flex items-center gap-4">
-                      <Avatar className="h-16 w-16 shadow-lg">
+                      <Avatar className="h-16 w-16 shadow-lg overflow-hidden">
                         <AvatarImage
                           src={
                             profilePhoto
@@ -173,8 +201,11 @@ const Profile = () => {
                                 "https://via.placeholder.com/150"
                           }
                           alt="Profile Preview"
+                          className="object-cover h-full w-full"
                         />
-                        <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                        <AvatarFallback className="text-xl font-bold">
+                          {user?.name?.charAt(0)}
+                        </AvatarFallback>
                       </Avatar>
                       <Button
                         variant="outline"
@@ -220,8 +251,9 @@ const Profile = () => {
         </div>
       </motion.div>
 
+      {/* Enrolled Courses */}
       <motion.div
-        className="max-w-5xl mx-auto mt-10"
+        className="max-w-5xl mx-auto mt-10 px-4"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
