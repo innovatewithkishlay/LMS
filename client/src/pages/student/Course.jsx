@@ -3,29 +3,25 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; // Import Framer Motion
 
 const Course = ({ course, isPurchased, completionPercentage }) => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
     if (isPurchased) {
-      // Navigate to the course progress page
       navigate(`/course-progress/${course._id}`);
     } else {
-      // Navigate to the course detail page for enrollment
       navigate(`/course-detail/${course._id}`);
     }
   };
 
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }} // Slightly scale up on hover
-      whileTap={{ scale: 0.95 }} // Slightly scale down on tap
-      initial={{ opacity: 0, y: 20 }} // Initial animation
-      animate={{ opacity: 1, y: 0 }} // Animate into view
-      transition={{ duration: 0.3, ease: "easeInOut" }} // Smooth transition
-      className="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transform transition-all duration-300"
+      initial={{ opacity: 0, y: 20 }} // Initial state: invisible and slightly below
+      animate={{ opacity: 1, y: 0 }} // Final state: visible and in position
+      transition={{ duration: 0.5, ease: "easeOut" }} // Smooth transition
+      className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800 transition-shadow duration-300 hover:shadow-xl"
     >
       <Card className="dark:bg-gray-800 bg-white">
         {/* Course Thumbnail */}
@@ -85,21 +81,21 @@ const Course = ({ course, isPurchased, completionPercentage }) => {
 
           {/* Course Price and Button */}
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-800 dark:text-white">
-              ₹{course.coursePrice}
-            </span>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+            {!isPurchased && (
+              <span className="text-2xl font-bold text-gray-800 dark:text-white">
+                ₹{course.coursePrice}
+              </span>
+            )}
+            <button
               onClick={handleButtonClick}
-              className={`px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all ${
+              className={`px-5 py-2 rounded-lg shadow-md transition-all duration-300 ${
                 isPurchased
                   ? "bg-green-600 text-white hover:bg-green-700"
                   : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
             >
               {isPurchased ? "Continue Course" : "Enroll Now"}
-            </motion.button>
+            </button>
           </div>
         </CardContent>
       </Card>

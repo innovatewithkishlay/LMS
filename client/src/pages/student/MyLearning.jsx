@@ -22,19 +22,11 @@ const MyLearning = () => {
                 (enrolledCourse) => enrolledCourse._id === course._id
               );
 
-              // Get the completion percentage for the course
-              const courseProgress = data.user.enrolledCourses.find(
-                (enrolledCourse) => enrolledCourse._id === course._id
-              );
-              const completionPercentage =
-                courseProgress?.completionPercentage || 0;
-
               return (
                 <Course
                   course={course}
                   key={course._id}
                   isPurchased={isPurchased}
-                  completionPercentage={completionPercentage}
                 />
               );
             })}
