@@ -15,10 +15,29 @@ const MyLearning = () => {
         ) : myLearning.length === 0 ? (
           <p>You are not enrolled in any course.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {myLearning.map((course, index) => (
-              <Course key={index} course={course} />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {myLearning.map((course) => {
+              // Check if the course is purchased
+              const isPurchased = data.user.enrolledCourses.some(
+                (enrolledCourse) => enrolledCourse._id === course._id
+              );
+
+              // Get the completion percentage for the course
+              const courseProgress = data.user.enrolledCourses.find(
+                (enrolledCourse) => enrolledCourse._id === course._id
+              );
+              const completionPercentage =
+                courseProgress?.completionPercentage || 0;
+
+              return (
+                <Course
+                  course={course}
+                  key={course._id}
+                  isPurchased={isPurchased}
+                  completionPercentage={completionPercentage}
+                />
+              );
+            })}
           </div>
         )}
       </div>

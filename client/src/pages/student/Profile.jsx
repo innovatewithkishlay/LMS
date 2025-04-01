@@ -268,7 +268,12 @@ const Profile = () => {
             </p>
           ) : (
             user.enrolledCourses.map((course) => (
-              <Course course={course} key={course._id} />
+              <Course
+                course={course}
+                key={course._id}
+                isPurchased={true} // All courses in this section are purchased
+                completionPercentage={course.completionPercentage || 0} // Pass the completion percentage
+              />
             ))
           )}
         </div>
