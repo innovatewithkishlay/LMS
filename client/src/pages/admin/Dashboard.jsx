@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 import { motion } from "framer-motion";
 
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const courseData = purchasedCourse.map((course) => ({
     name: course.courseId.courseTitle,
     price: course.courseId.coursePrice,
+    students: course.studentsEnrolled || 0,
   }));
 
   const totalRevenue = purchasedCourse.reduce(
@@ -95,7 +97,7 @@ const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={400}>
               <LineChart data={courseData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                 <XAxis
@@ -106,13 +108,34 @@ const Dashboard = () => {
                   interval={0}
                 />
                 <YAxis stroke="#6b7280" />
-                <Tooltip formatter={(value, name) => [`₹${value}`, name]} />
+                <Tooltip
+                  formatter={(value, name) => [`₹${value}`, name]}
+                  contentStyle={{
+                    backgroundColor: "#1f2937",
+                    borderRadius: "8px",
+                    color: "#fff",
+                  }}
+                />
+                <Legend
+                  verticalAlign="top"
+                  align="right"
+                  wrapperStyle={{ paddingBottom: "10px" }}
+                />
                 <Line
                   type="monotone"
                   dataKey="price"
+                  name="Course Price"
                   stroke="#4a90e2"
                   strokeWidth={3}
                   dot={{ stroke: "#4a90e2", strokeWidth: 2 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="students"
+                  name="Students Enrolled"
+                  stroke="#34d399"
+                  strokeWidth={3}
+                  dot={{ stroke: "#34d399", strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>

@@ -33,76 +33,108 @@ const AddCourse = () => {
     await createCourse({ courseTitle, category });
   };
 
-  // for displaying toast
-  useEffect(()=>{
-    if(isSuccess){
-        toast.success(data?.message || "Course created.");
-        navigate("/admin/course");
+  // Display toast notifications
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Course created.");
+      navigate("/admin/course");
     }
-  },[isSuccess, error])
+  }, [isSuccess, error]);
 
   return (
-    <div className="flex-1 mx-10">
-      <div className="mb-4">
-        <h1 className="font-bold text-xl">
-          Lets add course, add some basic course details for your new course
+    <div className="flex-1 mx-auto max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="font-extrabold text-2xl text-gray-800 dark:text-gray-100">
+          Add a New Course
         </h1>
-        <p className="text-sm">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus,
-          laborum!
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Provide basic details about your course to get started.
         </p>
       </div>
-      <div className="space-y-4">
+
+      {/* Form */}
+      <div className="space-y-6">
+        {/* Course Title */}
         <div>
-          <Label>Title</Label>
+          <Label className="text-gray-700 dark:text-gray-300">
+            Course Title
+          </Label>
           <Input
             type="text"
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
-            placeholder="Your Course Name"
+            placeholder="Enter your course name"
+            className="mt-2"
           />
         </div>
+
+        {/* Category */}
         <div>
-          <Label>Category</Label>
+          <Label className="text-gray-700 dark:text-gray-300">Category</Label>
           <Select onValueChange={getSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full mt-2">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
-                <SelectItem value="Next JS">Next JS</SelectItem>
-                <SelectItem value="Data Science">Data Science</SelectItem>
-                <SelectItem value="Frontend Development">
-                  Frontend Development
+                <SelectLabel>Math</SelectLabel>
+                <SelectItem value="Algebra">Algebra</SelectItem>
+                <SelectItem value="Geometry">Geometry</SelectItem>
+                <SelectItem value="Calculus">Calculus</SelectItem>
+                <SelectItem value="Statistics">Statistics</SelectItem>
+
+                <SelectLabel>Science</SelectLabel>
+                <SelectItem value="Physics">Physics</SelectItem>
+                <SelectItem value="Chemistry">Chemistry</SelectItem>
+                <SelectItem value="Biology">Biology</SelectItem>
+                <SelectItem value="Earth Science">Earth Science</SelectItem>
+
+                <SelectLabel>English</SelectLabel>
+                <SelectItem value="Grammar">Grammar</SelectItem>
+                <SelectItem value="Literature">Literature</SelectItem>
+                <SelectItem value="Writing Skills">Writing Skills</SelectItem>
+                <SelectItem value="Vocabulary">Vocabulary</SelectItem>
+
+                <SelectLabel>Social Studies</SelectLabel>
+                <SelectItem value="History">History</SelectItem>
+                <SelectItem value="Geography">Geography</SelectItem>
+                <SelectItem value="Civics">Civics</SelectItem>
+                <SelectItem value="Economics">Economics</SelectItem>
+
+                <SelectLabel>General Knowledge</SelectLabel>
+                <SelectItem value="Current Affairs">Current Affairs</SelectItem>
+                <SelectItem value="World Facts">World Facts</SelectItem>
+                <SelectItem value="Logical Reasoning">
+                  Logical Reasoning
                 </SelectItem>
-                <SelectItem value="Fullstack Development">
-                  Fullstack Development
-                </SelectItem>
-                <SelectItem value="MERN Stack Development">
-                  MERN Stack Development
-                </SelectItem>
-                <SelectItem value="Javascript">Javascript</SelectItem>
-                <SelectItem value="Python">Python</SelectItem>
-                <SelectItem value="Docker">Docker</SelectItem>
-                <SelectItem value="MongoDB">MongoDB</SelectItem>
-                <SelectItem value="HTML">HTML</SelectItem>
+                <SelectItem value="Quizzes">Quizzes</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => navigate("/admin/course")}>
+
+        {/* Buttons */}
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            onClick={() => navigate("/admin/course")}
+            className="w-full sm:w-auto"
+          >
             Back
           </Button>
-          <Button disabled={isLoading} onClick={createCourseHandler}>
+          <Button
+            disabled={isLoading}
+            onClick={createCourseHandler}
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
+                Creating...
               </>
             ) : (
-              "Create"
+              "Create Course"
             )}
           </Button>
         </div>
