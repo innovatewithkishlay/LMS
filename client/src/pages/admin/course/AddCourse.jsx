@@ -78,47 +78,26 @@ const AddCourse = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold">
-                  Math
-                </SelectLabel>
-                <SelectItem value="Algebra">Algebra</SelectItem>
-                <SelectItem value="Geometry">Geometry</SelectItem>
-                <SelectItem value="Calculus">Calculus</SelectItem>
-                <SelectItem value="Statistics">Statistics</SelectItem>
-
-                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
-                  Science
-                </SelectLabel>
+                <SelectItem value="Math">Math</SelectItem>
                 <SelectItem value="Physics">Physics</SelectItem>
                 <SelectItem value="Chemistry">Chemistry</SelectItem>
                 <SelectItem value="Biology">Biology</SelectItem>
-                <SelectItem value="Earth Science">Earth Science</SelectItem>
-
-                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
-                  English
-                </SelectLabel>
-                <SelectItem value="Grammar">Grammar</SelectItem>
-                <SelectItem value="Literature">Literature</SelectItem>
-                <SelectItem value="Writing Skills">Writing Skills</SelectItem>
-                <SelectItem value="Vocabulary">Vocabulary</SelectItem>
-
-                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
-                  Social Studies
-                </SelectLabel>
                 <SelectItem value="History">History</SelectItem>
-                <SelectItem value="Geography">Geography</SelectItem>
                 <SelectItem value="Civics">Civics</SelectItem>
                 <SelectItem value="Economics">Economics</SelectItem>
-
-                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
+                <SelectItem value="English Grammar">English Grammar</SelectItem>
+                <SelectItem value="Spoken English">Spoken English</SelectItem>
+                <SelectItem value="Hindi Grammar">Hindi Grammar</SelectItem>
+                <SelectItem value="General Knowledge">
                   General Knowledge
-                </SelectLabel>
-                <SelectItem value="Current Affairs">Current Affairs</SelectItem>
-                <SelectItem value="World Facts">World Facts</SelectItem>
-                <SelectItem value="Logical Reasoning">
-                  Logical Reasoning
                 </SelectItem>
-                <SelectItem value="Quizzes">Quizzes</SelectItem>
+                <SelectItem value="Computer Coding">Computer Coding</SelectItem>
+                <SelectItem value="Art & Craft">Art & Craft</SelectItem>
+                <SelectItem value="Music">Music</SelectItem>
+                <SelectItem value="Public Speaking">Public Speaking</SelectItem>
+                <SelectItem value="Environmental Studies">
+                  Environmental Studies
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

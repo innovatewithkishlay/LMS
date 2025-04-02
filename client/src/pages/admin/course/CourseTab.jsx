@@ -170,17 +170,17 @@ const CourseTab = () => {
   if (courseByIdLoading) return <h1>Loading...</h1>;
 
   return (
-    <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-900">
+    <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-900 overflow-x-hidden px-4 sm:px-6">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-        <div>
-          <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        <div className="w-full sm:w-auto">
+          <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-100 max-w-full">
             Edit Course
           </CardTitle>
-          <CardDescription className="text-gray-600 dark:text-gray-400">
+          <CardDescription className="text-gray-600 dark:text-gray-400 max-w-full">
             Make changes to your course details and save them.
           </CardDescription>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0">
+        <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
           <Button
             disabled={courseByIdData?.course.lectures.length === 0}
             variant="outline"
@@ -189,10 +189,13 @@ const CourseTab = () => {
                 courseByIdData?.course.isPublished ? "false" : "true"
               )
             }
+            className="w-full sm:w-auto"
           >
             {courseByIdData?.course.isPublished ? "Unpublish" : "Publish"}
           </Button>
-          <Button variant="destructive">Remove Course</Button>
+          <Button variant="destructive" className="w-full sm:w-auto">
+            Remove Course
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -206,7 +209,7 @@ const CourseTab = () => {
               value={input.courseTitle}
               onChange={changeEventHandler}
               placeholder="Ex. Fullstack Developer"
-              className="mt-2"
+              className="mt-2 w-full max-w-full"
             />
           </div>
 
@@ -219,7 +222,7 @@ const CourseTab = () => {
               value={input.subTitle}
               onChange={changeEventHandler}
               placeholder="Ex. Become a Fullstack Developer from zero to hero"
-              className="mt-2"
+              className="mt-2 w-full max-w-full"
             />
           </div>
 
@@ -228,9 +231,9 @@ const CourseTab = () => {
             <Label className="text-gray-700 dark:text-gray-300">
               Description
             </Label>
-            <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+            <div className="rounded-lg p-4 bg-white dark:bg-gray-900">
               {/* Toolbar */}
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-4 overflow-x-auto">
                 <button
                   onClick={() => editor.chain().focus().toggleBold().run()}
                   className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
@@ -347,7 +350,7 @@ const CourseTab = () => {
               {/* Editor Content */}
               <EditorContent
                 editor={editor}
-                className="prose dark:prose-invert max-w-none focus:outline-none"
+                className="prose dark:prose-invert max-w-none focus:outline-none min-h-[50px] w-full"
               />
             </div>
           </div>
@@ -361,47 +364,41 @@ const CourseTab = () => {
               <Select
                 defaultValue={input.category}
                 onValueChange={selectCategory}
+                className="w-full"
               >
                 <SelectTrigger className="w-full mt-2">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Math</SelectLabel>
-                    <SelectItem value="Algebra">Algebra</SelectItem>
-                    <SelectItem value="Geometry">Geometry</SelectItem>
-                    <SelectItem value="Calculus">Calculus</SelectItem>
-                    <SelectItem value="Statistics">Statistics</SelectItem>
-
-                    <SelectLabel>Science</SelectLabel>
+                    <SelectItem value="Math">Math</SelectItem>
                     <SelectItem value="Physics">Physics</SelectItem>
                     <SelectItem value="Chemistry">Chemistry</SelectItem>
                     <SelectItem value="Biology">Biology</SelectItem>
-                    <SelectItem value="Earth Science">Earth Science</SelectItem>
-
-                    <SelectLabel>English</SelectLabel>
-                    <SelectItem value="Grammar">Grammar</SelectItem>
-                    <SelectItem value="Literature">Literature</SelectItem>
-                    <SelectItem value="Writing Skills">
-                      Writing Skills
-                    </SelectItem>
-                    <SelectItem value="Vocabulary">Vocabulary</SelectItem>
-
-                    <SelectLabel>Social Studies</SelectLabel>
                     <SelectItem value="History">History</SelectItem>
-                    <SelectItem value="Geography">Geography</SelectItem>
                     <SelectItem value="Civics">Civics</SelectItem>
                     <SelectItem value="Economics">Economics</SelectItem>
-
-                    <SelectLabel>General Knowledge</SelectLabel>
-                    <SelectItem value="Current Affairs">
-                      Current Affairs
+                    <SelectItem value="English Grammar">
+                      English Grammar
                     </SelectItem>
-                    <SelectItem value="World Facts">World Facts</SelectItem>
-                    <SelectItem value="Logical Reasoning">
-                      Logical Reasoning
+                    <SelectItem value="Spoken English">
+                      Spoken English
                     </SelectItem>
-                    <SelectItem value="Quizzes">Quizzes</SelectItem>
+                    <SelectItem value="Hindi Grammar">Hindi Grammar</SelectItem>
+                    <SelectItem value="General Knowledge">
+                      General Knowledge
+                    </SelectItem>
+                    <SelectItem value="Computer Coding">
+                      Computer Coding
+                    </SelectItem>
+                    <SelectItem value="Art & Craft">Art & Craft</SelectItem>
+                    <SelectItem value="Music">Music</SelectItem>
+                    <SelectItem value="Public Speaking">
+                      Public Speaking
+                    </SelectItem>
+                    <SelectItem value="Environmental Studies">
+                      Environmental Studies
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -413,13 +410,13 @@ const CourseTab = () => {
               <Select
                 defaultValue={input.courseLevel}
                 onValueChange={selectCourseLevel}
+                className="w-full"
               >
                 <SelectTrigger className="w-full mt-2">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Course Level</SelectLabel>
                     <SelectItem value="Beginner">Beginner</SelectItem>
                     <SelectItem value="Medium">Medium</SelectItem>
                     <SelectItem value="Advance">Advance</SelectItem>
@@ -437,7 +434,7 @@ const CourseTab = () => {
                 value={input.coursePrice}
                 onChange={changeEventHandler}
                 placeholder="199"
-                className="mt-2"
+                className="mt-2 w-full max-w-full"
               />
             </div>
           </div>
