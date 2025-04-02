@@ -1,4 +1,7 @@
-import RichTextEditor from "@/components/RichTextEditor";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +26,18 @@ import {
   useGetCourseByIdQuery,
   usePublishCourseMutation,
 } from "@/features/api/courseApi";
-import { Loader2, UploadCloud } from "lucide-react";
+import {
+  Loader2,
+  UploadCloud,
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  List,
+  Heading,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -139,6 +153,20 @@ const CourseTab = () => {
     }
   }, [isSuccess, error]);
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+    ],
+    content: input.description,
+    onUpdate: ({ editor }) => {
+      setInput({ ...input, description: editor.getHTML() });
+    },
+  });
+
   if (courseByIdLoading) return <h1>Loading...</h1>;
 
   return (
@@ -200,7 +228,128 @@ const CourseTab = () => {
             <Label className="text-gray-700 dark:text-gray-300">
               Description
             </Label>
-            <RichTextEditor input={input} setInput={setInput} />
+            <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900">
+              {/* Toolbar */}
+              <div className="flex items-center gap-2 mb-4">
+                <button
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive("bold")
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Bold"
+                >
+                  <Bold size={18} />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive("italic")
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Italic"
+                >
+                  <Italic size={18} />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleUnderline().run()}
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive("underline")
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Underline"
+                >
+                  <UnderlineIcon size={18} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 1 }).run()
+                  }
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive("heading", { level: 1 })
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Heading 1"
+                >
+                  <Heading size={18} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 2 }).run()
+                  }
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive("heading", { level: 2 })
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Heading 2"
+                >
+                  <Heading size={16} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().toggleBulletList().run()
+                  }
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive("bulletList")
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Bullet List"
+                >
+                  <List size={18} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().setTextAlign("left").run()
+                  }
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive({ textAlign: "left" })
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Align Left"
+                >
+                  <AlignLeft size={18} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().setTextAlign("center").run()
+                  }
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive({ textAlign: "center" })
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Align Center"
+                >
+                  <AlignCenter size={18} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().setTextAlign("right").run()
+                  }
+                  className={`p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                    editor.isActive({ textAlign: "right" })
+                      ? "bg-gray-300 dark:bg-gray-600"
+                      : ""
+                  }`}
+                  title="Align Right"
+                >
+                  <AlignRight size={18} />
+                </button>
+              </div>
+
+              {/* Editor Content */}
+              <EditorContent
+                editor={editor}
+                className="prose dark:prose-invert max-w-none focus:outline-none"
+              />
+            </div>
           </div>
 
           {/* Category, Level, and Price */}

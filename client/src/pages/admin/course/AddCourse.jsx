@@ -78,7 +78,7 @@ const AddCourse = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel className="text-blue-600 font-semibold">
+                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold">
                   Math
                 </SelectLabel>
                 <SelectItem value="Algebra">Algebra</SelectItem>
@@ -86,7 +86,7 @@ const AddCourse = () => {
                 <SelectItem value="Calculus">Calculus</SelectItem>
                 <SelectItem value="Statistics">Statistics</SelectItem>
 
-                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
                   Science
                 </SelectLabel>
                 <SelectItem value="Physics">Physics</SelectItem>
@@ -94,7 +94,7 @@ const AddCourse = () => {
                 <SelectItem value="Biology">Biology</SelectItem>
                 <SelectItem value="Earth Science">Earth Science</SelectItem>
 
-                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
                   English
                 </SelectLabel>
                 <SelectItem value="Grammar">Grammar</SelectItem>
@@ -102,7 +102,7 @@ const AddCourse = () => {
                 <SelectItem value="Writing Skills">Writing Skills</SelectItem>
                 <SelectItem value="Vocabulary">Vocabulary</SelectItem>
 
-                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
                   Social Studies
                 </SelectLabel>
                 <SelectItem value="History">History</SelectItem>
@@ -110,7 +110,7 @@ const AddCourse = () => {
                 <SelectItem value="Civics">Civics</SelectItem>
                 <SelectItem value="Economics">Economics</SelectItem>
 
-                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                <SelectLabel className="text-blue-600 dark:text-blue-400 font-semibold mt-2">
                   General Knowledge
                 </SelectLabel>
                 <SelectItem value="Current Affairs">Current Affairs</SelectItem>
