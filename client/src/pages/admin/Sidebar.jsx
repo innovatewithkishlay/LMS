@@ -1,4 +1,4 @@
-import { ChartNoAxesColumn, SquareLibrary } from "lucide-react";
+import { ChartNoAxesColumn, SquareLibrary, Menu, X } from "lucide-react";
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -96,6 +96,76 @@ const Sidebar = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* Sidebar for Mobile */}
+      <div className="lg:hidden">
+        <button
+          className="p-3 text-gray-800 dark:text-gray-200"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+        {isMobileMenuOpen && (
+          <motion.div
+            className="fixed top-0 left-0 w-[250px] h-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-lg z-50"
+            variants={sidebarVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <div className="space-y-6 p-5">
+              {/* Logo */}
+              <div className="text-center text-xl font-bold mb-6">
+                <h1 className="text-blue-600 dark:text-blue-400">
+                  Admin Panel
+                </h1>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="space-y-4">
+                <Link
+                  to="dashboard"
+                  className={`relative flex items-center gap-3 p-3 rounded-lg transition-all ${
+                    location.pathname.includes("dashboard")
+                      ? "text-blue-500 dark:text-blue-400"
+                      : "hover:text-blue-500 dark:hover:text-blue-400"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {/* Active Indicator */}
+                  {location.pathname.includes("dashboard") && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute left-0 top-0 h-full w-1 bg-blue-700 rounded-r-lg"
+                    />
+                  )}
+                  <ChartNoAxesColumn size={22} />
+                  <h1 className="text-lg font-medium">Dashboard</h1>
+                </Link>
+                <Link
+                  to="course"
+                  className={`relative flex items-center gap-3 p-3 rounded-lg transition-all ${
+                    location.pathname.includes("course")
+                      ? "text-blue-500 dark:text-blue-400"
+                      : "hover:text-blue-500 dark:hover:text-blue-400"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {/* Active Indicator */}
+                  {location.pathname.includes("course") && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute left-0 top-0 h-full w-1 bg-blue-700 rounded-r-lg"
+                    />
+                  )}
+                  <SquareLibrary size={22} />
+                  <h1 className="text-lg font-medium">Courses</h1>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </div>
 
       {/* Main Content */}
       <motion.div
