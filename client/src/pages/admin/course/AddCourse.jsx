@@ -78,31 +78,41 @@ const AddCourse = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Math</SelectLabel>
+                <SelectLabel className="text-blue-600 font-semibold">
+                  Math
+                </SelectLabel>
                 <SelectItem value="Algebra">Algebra</SelectItem>
                 <SelectItem value="Geometry">Geometry</SelectItem>
                 <SelectItem value="Calculus">Calculus</SelectItem>
                 <SelectItem value="Statistics">Statistics</SelectItem>
 
-                <SelectLabel>Science</SelectLabel>
+                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                  Science
+                </SelectLabel>
                 <SelectItem value="Physics">Physics</SelectItem>
                 <SelectItem value="Chemistry">Chemistry</SelectItem>
                 <SelectItem value="Biology">Biology</SelectItem>
                 <SelectItem value="Earth Science">Earth Science</SelectItem>
 
-                <SelectLabel>English</SelectLabel>
+                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                  English
+                </SelectLabel>
                 <SelectItem value="Grammar">Grammar</SelectItem>
                 <SelectItem value="Literature">Literature</SelectItem>
                 <SelectItem value="Writing Skills">Writing Skills</SelectItem>
                 <SelectItem value="Vocabulary">Vocabulary</SelectItem>
 
-                <SelectLabel>Social Studies</SelectLabel>
+                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                  Social Studies
+                </SelectLabel>
                 <SelectItem value="History">History</SelectItem>
                 <SelectItem value="Geography">Geography</SelectItem>
                 <SelectItem value="Civics">Civics</SelectItem>
                 <SelectItem value="Economics">Economics</SelectItem>
 
-                <SelectLabel>General Knowledge</SelectLabel>
+                <SelectLabel className="text-blue-600 font-semibold mt-2">
+                  General Knowledge
+                </SelectLabel>
                 <SelectItem value="Current Affairs">Current Affairs</SelectItem>
                 <SelectItem value="World Facts">World Facts</SelectItem>
                 <SelectItem value="Logical Reasoning">

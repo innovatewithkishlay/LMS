@@ -218,23 +218,41 @@ const CourseTab = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Category</SelectLabel>
-                    <SelectItem value="Next JS">Next JS</SelectItem>
-                    <SelectItem value="Data Science">Data Science</SelectItem>
-                    <SelectItem value="Frontend Development">
-                      Frontend Development
+                    <SelectLabel>Math</SelectLabel>
+                    <SelectItem value="Algebra">Algebra</SelectItem>
+                    <SelectItem value="Geometry">Geometry</SelectItem>
+                    <SelectItem value="Calculus">Calculus</SelectItem>
+                    <SelectItem value="Statistics">Statistics</SelectItem>
+
+                    <SelectLabel>Science</SelectLabel>
+                    <SelectItem value="Physics">Physics</SelectItem>
+                    <SelectItem value="Chemistry">Chemistry</SelectItem>
+                    <SelectItem value="Biology">Biology</SelectItem>
+                    <SelectItem value="Earth Science">Earth Science</SelectItem>
+
+                    <SelectLabel>English</SelectLabel>
+                    <SelectItem value="Grammar">Grammar</SelectItem>
+                    <SelectItem value="Literature">Literature</SelectItem>
+                    <SelectItem value="Writing Skills">
+                      Writing Skills
                     </SelectItem>
-                    <SelectItem value="Fullstack Development">
-                      Fullstack Development
+                    <SelectItem value="Vocabulary">Vocabulary</SelectItem>
+
+                    <SelectLabel>Social Studies</SelectLabel>
+                    <SelectItem value="History">History</SelectItem>
+                    <SelectItem value="Geography">Geography</SelectItem>
+                    <SelectItem value="Civics">Civics</SelectItem>
+                    <SelectItem value="Economics">Economics</SelectItem>
+
+                    <SelectLabel>General Knowledge</SelectLabel>
+                    <SelectItem value="Current Affairs">
+                      Current Affairs
                     </SelectItem>
-                    <SelectItem value="MERN Stack Development">
-                      MERN Stack Development
+                    <SelectItem value="World Facts">World Facts</SelectItem>
+                    <SelectItem value="Logical Reasoning">
+                      Logical Reasoning
                     </SelectItem>
-                    <SelectItem value="Javascript">Javascript</SelectItem>
-                    <SelectItem value="Python">Python</SelectItem>
-                    <SelectItem value="Docker">Docker</SelectItem>
-                    <SelectItem value="MongoDB">MongoDB</SelectItem>
-                    <SelectItem value="HTML">HTML</SelectItem>
+                    <SelectItem value="Quizzes">Quizzes</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
