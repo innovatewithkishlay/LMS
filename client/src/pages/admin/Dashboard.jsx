@@ -1,17 +1,29 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
 import React from "react";
+import { Line } from "react-chartjs-2";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
-  ResponsiveContainer,
   Legend,
-} from "recharts";
+} from "chart.js";
 import { motion } from "framer-motion";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = () => {
   const { data, isSuccess, isError, isLoading } = useGetPurchasedCoursesQuery();
@@ -34,6 +46,91 @@ const Dashboard = () => {
   );
 
   const totalSales = purchasedCourse.length;
+
+  // Prepare data for Chart.js
+  const chartData = {
+    labels: courseData.map((course) => course.name),
+    datasets: [
+      {
+        label: "Course Price (₹)",
+        data: courseData.map((course) => course.price),
+        borderColor: "#4a90e2",
+        backgroundColor: "rgba(74, 144, 226, 0.2)",
+        borderWidth: 2,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: "#4a90e2",
+      },
+      {
+        label: "Students Enrolled",
+        data: courseData.map((course) => course.students),
+        borderColor: "#34d399",
+        backgroundColor: "rgba(52, 211, 153, 0.2)",
+        borderWidth: 2,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: "#34d399",
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          color: "#6b7280",
+          font: {
+            size: 14,
+          },
+          usePointStyle: true, // Use dots instead of lines in the legend
+          padding: 20, // Add spacing between legend items
+        },
+        onClick: (e, legendItem, legend) => {
+          // Custom behavior for toggling datasets
+          const index = legendItem.datasetIndex;
+          const chart = legend.chart;
+          const meta = chart.getDatasetMeta(index);
+          meta.hidden = !meta.hidden; // Toggle visibility
+          chart.update();
+        },
+      },
+      tooltip: {
+        backgroundColor: "#1f2937",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        borderColor: "#4a90e2",
+        borderWidth: 1,
+        padding: 10,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#6b7280",
+          font: {
+            size: 12,
+          },
+        },
+        grid: {
+          color: "#e5e7eb",
+        },
+      },
+      y: {
+        ticks: {
+          color: "#6b7280",
+          font: {
+            size: 12,
+          },
+        },
+        grid: {
+          color: "#e5e7eb",
+        },
+      },
+    },
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -88,56 +185,18 @@ const Dashboard = () => {
         variants={cardVariants}
         className="col-span-1 sm:col-span-2 lg:col-span-4"
       >
-        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800">
+        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800 rounded-lg">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-              Course Prices
+            <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+              Course Performance Overview
             </CardTitle>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              A detailed view of course prices and student enrollments.
+            </p>
           </CardHeader>
           <CardContent>
             <div className="w-full h-[300px] sm:h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={courseData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="#6b7280"
-                    angle={-30}
-                    textAnchor="end"
-                    interval={0}
-                  />
-                  <YAxis stroke="#6b7280" />
-                  <Tooltip
-                    formatter={(value, name) => [`₹${value}`, name]}
-                    contentStyle={{
-                      backgroundColor: "#1f2937",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
-                  <Legend
-                    verticalAlign="top"
-                    align="right"
-                    wrapperStyle={{ paddingBottom: "10px" }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="price"
-                    name="Course Price"
-                    stroke="#4a90e2"
-                    strokeWidth={3}
-                    dot={{ stroke: "#4a90e2", strokeWidth: 2 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="students"
-                    name="Students Enrolled"
-                    stroke="#34d399"
-                    strokeWidth={3}
-                    dot={{ stroke: "#34d399", strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <Line data={chartData} options={chartOptions} />
             </div>
           </CardContent>
         </Card>

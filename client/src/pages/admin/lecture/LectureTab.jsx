@@ -10,10 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useEditLectureMutation, useGetLectureByIdQuery, useRemoveLectureMutation } from "@/features/api/courseApi";
+import {
+  useEditLectureMutation,
+  useGetLectureByIdQuery,
+  useRemoveLectureMutation,
+} from "@/features/api/courseApi";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Loader2, UploadCloud } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -29,20 +33,25 @@ const LectureTab = () => {
   const params = useParams();
   const { courseId, lectureId } = params;
 
-  const {data:lectureData} = useGetLectureByIdQuery(lectureId);
+  const { data: lectureData } = useGetLectureByIdQuery(lectureId);
   const lecture = lectureData?.lecture;
 
-  useEffect(()=>{
-    if(lecture){
+  const fileInputRef = useRef(null); // Reference for the hidden file input
+
+  useEffect(() => {
+    if (lecture) {
       setLectureTitle(lecture.lectureTitle);
       setIsFree(lecture.isPreviewFree);
-      setUploadVideoInfo(lecture.videoInfo)
+      setUploadVideoInfo(lecture.videoInfo);
     }
-  },[lecture])
+  }, [lecture]);
 
-  const [edtiLecture, { data, isLoading, error, isSuccess }] =
+  const [editLecture, { data, isLoading, error, isSuccess }] =
     useEditLectureMutation();
-    const [removeLecture,{data:removeData, isLoading:removeLoading, isSuccess:removeSuccess}] = useRemoveLectureMutation();
+  const [
+    removeLecture,
+    { data: removeData, isLoading: removeLoading, isSuccess: removeSuccess },
+  ] = useRemoveLectureMutation();
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
@@ -68,7 +77,7 @@ const LectureTab = () => {
         }
       } catch (error) {
         console.log(error);
-        toast.error("video upload failed");
+        toast.error("Video upload failed");
       } finally {
         setMediaProgress(false);
       }
@@ -78,10 +87,10 @@ const LectureTab = () => {
   const editLectureHandler = async () => {
     console.log({ lectureTitle, uploadVideInfo, isFree, courseId, lectureId });
 
-    await edtiLecture({
+    await editLecture({
       lectureTitle,
-      videoInfo:uploadVideInfo,
-      isPreviewFree:isFree,
+      videoInfo: uploadVideInfo,
+      isPreviewFree: isFree,
       courseId,
       lectureId,
     });
@@ -89,7 +98,7 @@ const LectureTab = () => {
 
   const removeLectureHandler = async () => {
     await removeLecture(lectureId);
-  }
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -100,11 +109,11 @@ const LectureTab = () => {
     }
   }, [isSuccess, error]);
 
-  useEffect(()=>{
-    if(removeSuccess){
+  useEffect(() => {
+    if (removeSuccess) {
       toast.success(removeData.message);
     }
-  },[removeSuccess])
+  }, [removeSuccess]);
 
   return (
     <Card>
@@ -116,13 +125,19 @@ const LectureTab = () => {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button disbaled={removeLoading} variant="destructive" onClick={removeLectureHandler}>
-            {
-              removeLoading ? <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-              Please wait
-              </> : "Remove Lecture"
-            }
+          <Button
+            disabled={removeLoading}
+            variant="destructive"
+            onClick={removeLectureHandler}
+          >
+            {removeLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : (
+              "Remove Lecture"
+            )}
           </Button>
         </div>
       </CardHeader>
@@ -140,16 +155,31 @@ const LectureTab = () => {
           <Label>
             Video <span className="text-red-500">*</span>
           </Label>
-          <Input
-            type="file"
-            accept="video/*"
-            onChange={fileChangeHandler}
-            placeholder="Ex. Introduction to Javascript"
-            className="w-fit"
-          />
+          {/* Custom Upload Button */}
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current.click()} // Trigger hidden file input
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700"
+            >
+              <UploadCloud size={20} />
+              Upload Video
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="video/*"
+              onChange={fileChangeHandler}
+              className="hidden"
+            />
+          </div>
         </div>
         <div className="flex items-center space-x-2 my-5">
-          <Switch checked={isFree} onCheckedChange={setIsFree} id="airplane-mode" />
+          <Switch
+            checked={isFree}
+            onCheckedChange={setIsFree}
+            id="airplane-mode"
+          />
           <Label htmlFor="airplane-mode">Is this video FREE</Label>
         </div>
 
@@ -162,13 +192,14 @@ const LectureTab = () => {
 
         <div className="mt-4">
           <Button disabled={isLoading} onClick={editLectureHandler}>
-              {
-                isLoading ? <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
-                </> : "Update Lecture"
-              }
-            
+              </>
+            ) : (
+              "Update Lecture"
+            )}
           </Button>
         </div>
       </CardContent>

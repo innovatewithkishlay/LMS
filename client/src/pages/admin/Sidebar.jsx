@@ -29,7 +29,7 @@ const Sidebar = () => {
     <div className="relative flex">
       {/* Sidebar for Desktop */}
       <motion.div
-        className="hidden lg:block w-[250px] sm:w-[300px] bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 border-r border-gray-300 dark:border-gray-700 p-5 sticky top-0 h-screen"
+        className="hidden lg:block w-[250px] sm:w-[300px] bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 border-r border-gray-300 dark:border-gray-700 p-5 sticky top-0 h-screen overflow-hidden"
         initial={{ x: -50, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -45,6 +45,7 @@ const Sidebar = () => {
             <h1 className="text-blue-600 dark:text-blue-400">Admin Panel</h1>
           </motion.div>
 
+          {/* Navigation Links */}
           <div className="space-y-4">
             <motion.div
               variants={linkVariants}
@@ -83,7 +84,6 @@ const Sidebar = () => {
                     : "hover:text-blue-500 dark:hover:text-blue-400"
                 }`}
               >
-                {/* Active Indicator */}
                 {location.pathname.includes("course") && (
                   <motion.div
                     layoutId="activeIndicator"
@@ -117,7 +117,7 @@ const Sidebar = () => {
 
             {/* Sidebar */}
             <motion.div
-              className="fixed top-0 left-0 w-[250px] h-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-lg z-50"
+              className="fixed top-0 left-0 w-[250px] h-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 shadow-lg z-50 overflow-hidden"
               variants={sidebarVariants}
               initial="hidden"
               animate="visible"
@@ -150,7 +150,6 @@ const Sidebar = () => {
                     }`}
                     onClick={closeSidebar}
                   >
-                    {/* Active Indicator */}
                     {location.pathname.includes("dashboard") && (
                       <motion.div
                         layoutId="activeIndicator"
@@ -169,7 +168,6 @@ const Sidebar = () => {
                     }`}
                     onClick={closeSidebar}
                   >
-                    {/* Active Indicator */}
                     {location.pathname.includes("course") && (
                       <motion.div
                         layoutId="activeIndicator"
