@@ -35,7 +35,6 @@ const Dashboard = () => {
 
   const totalSales = purchasedCourse.length;
 
-  // Framer Motion Variants
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -56,13 +55,12 @@ const Dashboard = () => {
 
   return (
     <motion.div
-      className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      {/* Total Sales Card */}
-      <motion.div variants={cardVariants}>
+      <motion.div variants={cardVariants} className="col-span-1 lg:col-span-2">
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
           <CardHeader>
             <CardTitle>Total Sales</CardTitle>
@@ -74,7 +72,7 @@ const Dashboard = () => {
       </motion.div>
 
       {/* Total Revenue Card */}
-      <motion.div variants={cardVariants}>
+      <motion.div variants={cardVariants} className="col-span-1 lg:col-span-2">
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gradient-to-r from-green-500 to-teal-500 text-white">
           <CardHeader>
             <CardTitle>Total Revenue</CardTitle>
@@ -88,7 +86,7 @@ const Dashboard = () => {
       {/* Course Prices Chart */}
       <motion.div
         variants={cardVariants}
-        className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4"
+        className="col-span-1 sm:col-span-2 lg:col-span-4"
       >
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800">
           <CardHeader>
@@ -97,48 +95,50 @@ const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={courseData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis
-                  dataKey="name"
-                  stroke="#6b7280"
-                  angle={-30}
-                  textAnchor="end"
-                  interval={0}
-                />
-                <YAxis stroke="#6b7280" />
-                <Tooltip
-                  formatter={(value, name) => [`₹${value}`, name]}
-                  contentStyle={{
-                    backgroundColor: "#1f2937",
-                    borderRadius: "8px",
-                    color: "#fff",
-                  }}
-                />
-                <Legend
-                  verticalAlign="top"
-                  align="right"
-                  wrapperStyle={{ paddingBottom: "10px" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="price"
-                  name="Course Price"
-                  stroke="#4a90e2"
-                  strokeWidth={3}
-                  dot={{ stroke: "#4a90e2", strokeWidth: 2 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="students"
-                  name="Students Enrolled"
-                  stroke="#34d399"
-                  strokeWidth={3}
-                  dot={{ stroke: "#34d399", strokeWidth: 2 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="w-full h-[300px] sm:h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={courseData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                  <XAxis
+                    dataKey="name"
+                    stroke="#6b7280"
+                    angle={-30}
+                    textAnchor="end"
+                    interval={0}
+                  />
+                  <YAxis stroke="#6b7280" />
+                  <Tooltip
+                    formatter={(value, name) => [`₹${value}`, name]}
+                    contentStyle={{
+                      backgroundColor: "#1f2937",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    align="right"
+                    wrapperStyle={{ paddingBottom: "10px" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="price"
+                    name="Course Price"
+                    stroke="#4a90e2"
+                    strokeWidth={3}
+                    dot={{ stroke: "#4a90e2", strokeWidth: 2 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="students"
+                    name="Students Enrolled"
+                    stroke="#34d399"
+                    strokeWidth={3}
+                    dot={{ stroke: "#34d399", strokeWidth: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

@@ -7,7 +7,6 @@ const Sidebar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Framer Motion Variants
   const sidebarVariants = {
     hidden: { x: "-100%", opacity: 0 },
     visible: {
@@ -46,7 +45,6 @@ const Sidebar = () => {
             <h1 className="text-blue-600 dark:text-blue-400">Admin Panel</h1>
           </motion.div>
 
-          {/* Navigation Links */}
           <div className="space-y-4">
             <motion.div
               variants={linkVariants}
@@ -61,7 +59,6 @@ const Sidebar = () => {
                     : "hover:text-blue-500 dark:hover:text-blue-400"
                 }`}
               >
-                {/* Active Indicator */}
                 {location.pathname.includes("dashboard") && (
                   <motion.div
                     layoutId="activeIndicator"

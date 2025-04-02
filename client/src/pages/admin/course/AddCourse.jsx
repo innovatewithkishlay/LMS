@@ -42,9 +42,9 @@ const AddCourse = () => {
   }, [isSuccess, error]);
 
   return (
-    <div className="flex-1 mx-auto max-w-3xl p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+    <div className="flex-1 mx-auto max-w-3xl p-4 sm:p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-6 text-center sm:text-left">
         <h1 className="font-extrabold text-2xl text-gray-800 dark:text-gray-100">
           Add a New Course
         </h1>
@@ -65,7 +65,7 @@ const AddCourse = () => {
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
             placeholder="Enter your course name"
-            className="mt-2"
+            className="mt-2 w-full"
           />
         </div>
 
@@ -115,7 +115,7 @@ const AddCourse = () => {
         </div>
 
         {/* Buttons */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           <Button
             variant="outline"
             onClick={() => navigate("/admin/course")}
