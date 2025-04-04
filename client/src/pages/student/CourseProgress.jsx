@@ -20,6 +20,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import Chatbot from "@/components/Chatbot/chatbot";
+import { motion } from "framer-motion";
 
 const CourseProgress = () => {
   const params = useParams();
@@ -40,6 +42,7 @@ const CourseProgress = () => {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [showControls, setShowControls] = useState(false);
   const [skipFeedback, setSkipFeedback] = useState(null);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false); // State for chatbot
 
   const videoRef = useRef(null);
   const controlsTimeout = useRef(null);
@@ -161,153 +164,196 @@ const CourseProgress = () => {
     }
   };
 
+  const toggleChatbot = () => {
+    setIsChatbotOpen(!isChatbotOpen); // Toggle the chatbot state
+  };
+
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      {/* Display course name and progress */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">{courseTitle}</h1>
-        <Button
-          onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
-          variant={completed ? "outline" : "default"}
-          disabled={watchedLectures.length !== lectures.length}
-          className={`${
-            watchedLectures.length !== lectures.length
-              ? "cursor-not-allowed opacity-50"
-              : ""
-          }`}
-        >
-          {completed ? (
-            <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>
-            </div>
-          ) : (
-            "Mark as Completed"
-          )}
-        </Button>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-4 mb-6">
-        <div
-          className="bg-blue-600 h-4 rounded-full"
-          style={{ width: `${courseCompletionPercentage}%` }}
-        ></div>
-      </div>
-      <p className="text-sm text-gray-600 mb-4">
-        {courseCompletionPercentage}% of the course completed
-      </p>
-
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Video Section */}
-        <div
-          className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4 bg-black relative"
-          onMouseMove={showTemporaryControls}
-        >
-          <video
-            ref={videoRef}
-            src={currentLecture?.videoUrl || initialLecture.videoUrl}
-            className="w-full h-auto rounded-lg"
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={handleVideoEnd}
-            onLoadedMetadata={() => setDuration(videoRef.current.duration)}
-          />
-          {/* Skip Feedback */}
-          {skipFeedback && (
-            <div className="absolute inset-0 flex items-center justify-center text-white text-4xl font-bold">
-              {skipFeedback}
-            </div>
-          )}
-          {/* Custom Controls */}
-          {showControls && (
-            <div className="absolute inset-0 flex flex-col justify-between p-4">
-              {/* Play/Pause Button */}
-              <button
-                onClick={togglePlayPause}
-                className="text-white text-4xl mx-auto"
-              >
-                {isPlaying ? (
-                  <PauseCircle size={40} />
-                ) : (
-                  <CirclePlay size={40} />
-                )}
-              </button>
-              {/* Bottom Controls */}
-              <div className="flex items-center justify-between text-white">
-                {/* Timer */}
-                <span>{formatTime(currentTime)}</span>
-                {/* Seek Buttons */}
-                <div className="flex items-center gap-4">
-                  <button onClick={() => handleSeek(-10)}>
-                    <RotateCcw size={24} />
-                  </button>
-                  <button onClick={() => handleSeek(10)}>
-                    <RotateCw size={24} />
-                  </button>
-                </div>
-                {/* Playback Speed */}
-                <select
-                  value={playbackSpeed}
-                  onChange={handlePlaybackSpeedChange}
-                  className="bg-gray-800 text-white rounded px-2 py-1"
-                >
-                  <option value="0.5">0.5x</option>
-                  <option value="1">1x</option>
-                  <option value="1.2">1.2x</option>
-                  <option value="1.5">1.5x</option>
-                  <option value="2">2x</option>
-                </select>
-                {/* Remaining Time */}
-                <span>{formatRemainingTime()}</span>
-                {/* Fullscreen */}
-                <button onClick={handleFullScreen} className="text-white">
-                  <Maximize size={20} />
-                </button>
+    <div className="relative">
+      {/* Existing Course Progress UI */}
+      <div className="max-w-7xl mx-auto p-4">
+        {/* Display course name and progress */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">{courseTitle}</h1>
+          <Button
+            onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
+            variant={completed ? "outline" : "default"}
+            disabled={watchedLectures.length !== lectures.length}
+            className={`${
+              watchedLectures.length !== lectures.length
+                ? "cursor-not-allowed opacity-50"
+                : ""
+            }`}
+          >
+            {completed ? (
+              <div className="flex items-center">
+                <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>
               </div>
-            </div>
-          )}
+            ) : (
+              "Mark as Completed"
+            )}
+          </Button>
         </div>
 
-        {/* Lecture Sidebar */}
-        <div className="flex flex-col w-full md:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 md:pl-4 pt-4 md:pt-0">
-          <h2 className="font-semibold text-xl mb-4">Course Lectures</h2>
-          <div className="flex-1 overflow-y-auto">
-            {lectures.map((lecture) => (
-              <Card
-                key={lecture._id}
-                className={`mb-3 hover:cursor-pointer transition transform ${
-                  lecture._id === currentLecture?._id
-                    ? "bg-gray-200 dark:bg-gray-800"
-                    : ""
-                }`}
-                onClick={() => handleSelectLecture(lecture)}
-              >
-                <CardContent className="flex items-center justify-between p-4">
-                  <div className="flex items-center">
-                    {isLectureCompleted(lecture._id) ? (
-                      <CheckCircle2 size={24} className="text-green-500 mr-2" />
-                    ) : (
-                      <CirclePlay size={24} className="text-gray-500 mr-2" />
-                    )}
-                    <div>
-                      <CardTitle className="text-lg font-medium">
-                        {lecture.lectureTitle}
-                      </CardTitle>
-                    </div>
-                  </div>
-                  {isLectureCompleted(lecture._id) && (
-                    <Badge
-                      variant={"outline"}
-                      className="bg-green-200 text-green-600"
-                    >
-                      Completed
-                    </Badge>
+        {/* Progress Bar */}
+        <div className="w-full bg-gray-200 rounded-full h-4 mb-6">
+          <div
+            className="bg-blue-600 h-4 rounded-full"
+            style={{ width: `${courseCompletionPercentage}%` }}
+          ></div>
+        </div>
+        <p className="text-sm text-gray-600 mb-4">
+          {courseCompletionPercentage}% of the course completed
+        </p>
+
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Video Section */}
+          <div
+            className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4 bg-black relative"
+            onMouseMove={showTemporaryControls}
+          >
+            <video
+              ref={videoRef}
+              src={currentLecture?.videoUrl || initialLecture.videoUrl}
+              className="w-full h-auto rounded-lg"
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={handleVideoEnd}
+              onLoadedMetadata={() => setDuration(videoRef.current.duration)}
+            />
+            {/* Skip Feedback */}
+            {skipFeedback && (
+              <div className="absolute inset-0 flex items-center justify-center text-white text-4xl font-bold">
+                {skipFeedback}
+              </div>
+            )}
+            {showControls && (
+              <div className="absolute inset-0 flex flex-col justify-between p-4">
+                {/* Play/Pause Button */}
+                <button
+                  onClick={togglePlayPause}
+                  className="text-white text-4xl mx-auto"
+                >
+                  {isPlaying ? (
+                    <PauseCircle size={40} />
+                  ) : (
+                    <CirclePlay size={40} />
                   )}
-                </CardContent>
-              </Card>
-            ))}
+                </button>
+                {/* Bottom Controls */}
+                <div className="flex items-center justify-between text-white">
+                  {/* Timer */}
+                  <span>{formatTime(currentTime)}</span>
+                  {/* Seek Buttons */}
+                  <div className="flex items-center gap-4">
+                    <button onClick={() => handleSeek(-10)}>
+                      <RotateCcw size={24} />
+                    </button>
+                    <button onClick={() => handleSeek(10)}>
+                      <RotateCw size={24} />
+                    </button>
+                  </div>
+                  {/* Playback Speed */}
+                  <select
+                    value={playbackSpeed}
+                    onChange={handlePlaybackSpeedChange}
+                    className="bg-gray-800 text-white rounded px-2 py-1"
+                  >
+                    <option value="0.5">0.5x</option>
+                    <option value="1">1x</option>
+                    <option value="1.2">1.2x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                  </select>
+                  {/* Remaining Time */}
+                  <span>{formatRemainingTime()}</span>
+                  {/* Fullscreen */}
+                  <button onClick={handleFullScreen} className="text-white">
+                    <Maximize size={20} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Lecture Sidebar */}
+          <div className="flex flex-col w-full md:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 md:pl-4 pt-4 md:pt-0">
+            <h2 className="font-semibold text-xl mb-4">Course Lectures</h2>
+            <div className="flex-1 overflow-y-auto">
+              {lectures.map((lecture) => (
+                <Card
+                  key={lecture._id}
+                  className={`mb-3 hover:cursor-pointer transition transform ${
+                    lecture._id === currentLecture?._id
+                      ? "bg-gray-200 dark:bg-gray-800"
+                      : ""
+                  }`}
+                  onClick={() => handleSelectLecture(lecture)}
+                >
+                  <CardContent className="flex items-center justify-between p-4">
+                    <div className="flex items-center">
+                      {isLectureCompleted(lecture._id) ? (
+                        <CheckCircle2
+                          size={24}
+                          className="text-green-500 mr-2"
+                        />
+                      ) : (
+                        <CirclePlay size={24} className="text-gray-500 mr-2" />
+                      )}
+                      <div>
+                        <CardTitle className="text-lg font-medium">
+                          {lecture.lectureTitle}
+                        </CardTitle>
+                      </div>
+                    </div>
+                    {isLectureCompleted(lecture._id) && (
+                      <Badge
+                        variant={"outline"}
+                        className="bg-green-200 text-green-600"
+                      >
+                        Completed
+                      </Badge>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Chatbot Toggle Button */}
+      <motion.button
+        onClick={toggleChatbot}
+        className="fixed bottom-4 right-4 p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all"
+        whileHover={{ scale: 1.1 }} // Framer Motion hover animation
+        whileTap={{ scale: 0.9 }} // Framer Motion tap animation
+      >
+        <div className="flex items-center justify-center space-x-2">
+          <span className="text-lg font-semibold">AI</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 20.25c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 9.75l-3 3-3-3"
+            />
+          </svg>
+        </div>
+      </motion.button>
+
+      {/* Chatbot Sidebar */}
+      <Chatbot isOpen={isChatbotOpen} onClose={() => setIsChatbotOpen(false)} />
     </div>
   );
 };
