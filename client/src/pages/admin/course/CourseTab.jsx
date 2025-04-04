@@ -63,21 +63,6 @@ const CourseTab = () => {
 
   const [publishCourse] = usePublishCourseMutation();
 
-  useEffect(() => {
-    if (courseByIdData?.course) {
-      const course = courseByIdData?.course;
-      setInput({
-        courseTitle: course.courseTitle,
-        subTitle: course.subTitle,
-        description: course.description,
-        category: course.category,
-        courseLevel: course.courseLevel,
-        coursePrice: course.coursePrice,
-        courseThumbnail: "",
-      });
-    }
-  }, [courseByIdData]);
-
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const navigate = useNavigate();
 
@@ -161,11 +146,36 @@ const CourseTab = () => {
         types: ["heading", "paragraph"],
       }),
     ],
-    content: input.description,
+    content: input.description, // Initialize with the description from the input state
     onUpdate: ({ editor }) => {
       setInput({ ...input, description: editor.getHTML() });
     },
   });
+
+  useEffect(() => {
+    if (courseByIdData?.course) {
+      const course = courseByIdData.course;
+      setInput({
+        courseTitle: course.courseTitle || "",
+        subTitle: course.subTitle || "",
+        description: course.description || "", // Ensure description is set
+        category: course.category || "", // Ensure category is set
+        courseLevel: course.courseLevel || "", // Ensure course level is set
+        coursePrice: course.coursePrice || "",
+        courseThumbnail: course.courseThumbnail || "", // Load existing thumbnail
+      });
+
+      // Set the editor content with the existing description
+      if (editor) {
+        editor.commands.setContent(course.description || "");
+      }
+
+      // Set the preview thumbnail if it exists
+      if (course.courseThumbnail) {
+        setPreviewThumbnail(course.courseThumbnail);
+      }
+    }
+  }, [courseByIdData, editor]);
 
   if (courseByIdLoading) return <h1>Loading...</h1>;
 
@@ -206,7 +216,7 @@ const CourseTab = () => {
             <Input
               type="text"
               name="courseTitle"
-              value={input.courseTitle}
+              value={input.courseTitle} // Controlled input
               onChange={changeEventHandler}
               placeholder="Ex. Fullstack Developer"
               className="mt-2 w-full max-w-full"
@@ -362,7 +372,7 @@ const CourseTab = () => {
                 Category
               </Label>
               <Select
-                defaultValue={input.category}
+                value={input.category} // Use value instead of defaultValue for controlled components
                 onValueChange={selectCategory}
                 className="w-full"
               >
@@ -407,8 +417,9 @@ const CourseTab = () => {
               <Label className="text-gray-700 dark:text-gray-300">
                 Course Level
               </Label>
+              .
               <Select
-                defaultValue={input.courseLevel}
+                value={input.courseLevel} // Use value instead of defaultValue for controlled components
                 onValueChange={selectCourseLevel}
                 className="w-full"
               >
@@ -450,7 +461,9 @@ const CourseTab = () => {
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700"
               >
                 <UploadCloud size={20} />
-                Choose Thumbnail
+                {input.courseThumbnail || previewThumbnail
+                  ? "Edit Thumbnail"
+                  : "Choose Thumbnail"}
               </label>
               <Input
                 id="thumbnail"
@@ -460,9 +473,9 @@ const CourseTab = () => {
                 className="hidden"
               />
             </div>
-            {previewThumbnail && (
+            {(previewThumbnail || input.courseThumbnail) && (
               <img
-                src={previewThumbnail}
+                src={previewThumbnail || input.courseThumbnail}
                 className="w-full sm:w-64 mt-4 rounded-lg shadow-md"
                 alt="Course Thumbnail"
               />

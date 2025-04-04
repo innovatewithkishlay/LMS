@@ -16,7 +16,9 @@ import { useSearchParams } from "react-router-dom";
 
 const categories = [
   { id: "math", label: "Math" },
-  { id: "science", label: "Science" },
+  { id: "Physics", label: "Physics" },
+  { id: "Chemistry", label: "Chemistry" },
+  { id: "Biology", label: "Biology" },
   { id: "social-studies", label: "Social Studies" },
   { id: "english", label: "English" },
   { id: "history", label: "History" },
