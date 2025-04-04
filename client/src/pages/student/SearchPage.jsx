@@ -10,23 +10,27 @@ import { SearchResult } from "./SearchResult";
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query");
-  const [selectedCategories, setSelectedCatgories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortByPrice, setSortByPrice] = useState("");
 
-  const { data, isLoading } = useGetSearchCourseQuery({
+  // Fetch courses based on query, selected categories, and sort order
+  const { data, isLoading, isError } = useGetSearchCourseQuery({
     searchQuery: query,
-    categories: selectedCategories,
+    categories: selectedCategories.length > 0 ? selectedCategories : undefined,
     sortByPrice,
   });
 
-  const isEmpty = !isLoading && data?.courses.length === 0;
+  const isEmpty = !isLoading && (!data || data?.courses?.length === 0);
 
   const handleFilterChange = (categories, price) => {
-    console.log("Selected Categories:", categories);
-    console.log("Sort By Price:", price);
-    setSelectedCatgories(categories);
+    console.log("Selected Categories:", categories); // Debugging
+    console.log("Sort By Price:", price); // Debugging
+    setSelectedCategories(categories);
     setSortByPrice(price);
   };
+
+  console.log("Data:", data); // Debugging
+  console.log("Is Empty:", isEmpty); // Debugging
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
@@ -38,7 +42,10 @@ const SearchPage = () => {
         </p>
       </div>
       <div className="flex flex-col md:flex-row gap-14">
+        {/* Filter Component */}
         <Filter handleFilterChange={handleFilterChange} />
+
+        {/* Search Results */}
         <div className="flex-1 space-y-0">
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -46,6 +53,8 @@ const SearchPage = () => {
                 <SearchResultSkeleton key={idx} />
               ))}
             </div>
+          ) : isError ? (
+            <CourseNotFound />
           ) : isEmpty ? (
             <CourseNotFound />
           ) : (

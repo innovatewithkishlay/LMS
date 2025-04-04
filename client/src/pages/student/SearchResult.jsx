@@ -16,7 +16,7 @@ export const SearchResult = ({ course }) => {
         <img
           src={
             course.courseThumbnail ||
-            "https://via.placeholder.com/300x200?text=No+Image"
+            "https://via.placeholder.com/300x200?text=No+Image" 
           }
           alt={course.courseTitle || "Course Thumbnail"}
           className="w-full h-44 object-contain bg-gray-200"

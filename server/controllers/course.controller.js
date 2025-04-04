@@ -39,36 +39,39 @@ export const searchCourse = async (req, res) => {
 
     console.log("Query:", query);
     console.log("Categories:", categories);
+    console.log("Sort By Price:", sortByPrice);
 
-    const categoryArray = Array.isArray(categories)
-      ? categories
-      : categories.split(",").map((cat) => cat.trim());
+    // Parse categories into an array
+    const categoryArray = categories
+      ? categories.split(",").map((cat) => cat.trim())
+      : [];
 
+    console.log("Parsed Categories Array:", categoryArray);
+
+    // Build search criteria
     const searchCriteria = {
       isPublished: true,
     };
 
+    // Add query-based search
     if (query) {
       searchCriteria.$or = [
         { courseTitle: { $regex: query, $options: "i" } },
         { subTitle: { $regex: query, $options: "i" } },
         { description: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } },
       ];
     }
 
+    // Add category-based filtering (case-insensitive)
     if (categoryArray.length > 0) {
-      searchCriteria.$or = searchCriteria.$or || [];
-      categoryArray.forEach((category) => {
-        searchCriteria.$or.push(
-          { courseTitle: { $regex: category, $options: "i" } },
-          { subTitle: { $regex: category, $options: "i" } },
-          { description: { $regex: category, $options: "i" } },
-          { category: { $regex: category, $options: "i" } }
-        );
-      });
+      searchCriteria.category = {
+        $in: categoryArray.map((cat) => new RegExp(`^${cat}$`, "i")),
+      };
     }
 
+    console.log("Search Criteria:", JSON.stringify(searchCriteria, null, 2));
+
+    // Build sort options
     const sortOptions = {};
     if (sortByPrice === "low") {
       sortOptions.coursePrice = 1;
@@ -76,9 +79,14 @@ export const searchCourse = async (req, res) => {
       sortOptions.coursePrice = -1;
     }
 
+    console.log("Sort Options:", sortOptions);
+
+    // Fetch courses from the database
     const courses = await Course.find(searchCriteria)
       .populate({ path: "creator", select: "name photoUrl" })
       .sort(sortOptions);
+
+    console.log("Fetched Courses:", courses);
 
     if (courses.length === 0) {
       return res.status(404).json({

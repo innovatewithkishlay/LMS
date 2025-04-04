@@ -12,24 +12,41 @@ import {
 import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 
 const categories = [
-  { id: "nextjs", label: "Next JS" },
-  { id: "data science", label: "Data Science" },
-  { id: "frontend development", label: "Frontend Development" },
-  { id: "fullstack development", label: "Fullstack Development" },
-  { id: "mern stack development", label: "MERN Stack Development" },
-  { id: "backend development", label: "Backend Development" },
-  { id: "javascript", label: "Javascript" },
-  { id: "python", label: "Python" },
-  { id: "docker", label: "Docker" },
-  { id: "mongodb", label: "MongoDB" },
-  { id: "html", label: "HTML" },
+  { id: "math", label: "Math" },
+  { id: "science", label: "Science" },
+  { id: "social-studies", label: "Social Studies" },
+  { id: "english", label: "English" },
+  { id: "history", label: "History" },
+  { id: "geography", label: "Geography" },
+  { id: "computer-science", label: "Computer Science" },
+  { id: "art", label: "Art" },
+  { id: "music", label: "Music" },
+  { id: "physical-education", label: "Physical Education" },
+  { id: "economics", label: "Economics" },
 ];
 
 const Filter = ({ handleFilterChange }) => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [sortByPrice, setSortByPrice] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedCategories, setSelectedCategories] = useState(
+    searchParams.get("categories")?.split(",") || []
+  );
+  const [sortByPrice, setSortByPrice] = useState(
+    searchParams.get("sortByPrice") || ""
+  );
+
+  const updateURLParams = (categories, price) => {
+    const params = {};
+    if (categories.length > 0) {
+      params.categories = categories.join(",");
+    }
+    if (price) {
+      params.sortByPrice = price;
+    }
+    setSearchParams(params);
+  };
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prevCategories) => {
@@ -37,14 +54,18 @@ const Filter = ({ handleFilterChange }) => {
         ? prevCategories.filter((id) => id !== categoryId)
         : [...prevCategories, categoryId];
 
+      console.log("Selected Categories:", newCategories); // Debugging
       handleFilterChange(newCategories, sortByPrice);
+      updateURLParams(newCategories, sortByPrice);
       return newCategories;
     });
   };
 
   const selectByPriceHandler = (selectedValue) => {
     setSortByPrice(selectedValue);
+    console.log("Sort By Price:", selectedValue); // Debugging
     handleFilterChange(selectedCategories, selectedValue);
+    updateURLParams(selectedCategories, selectedValue);
   };
 
   return (
@@ -63,7 +84,7 @@ const Filter = ({ handleFilterChange }) => {
         <h1 className="font-bold text-lg md:text-xl text-gray-800">
           Filter Options
         </h1>
-        <Select onValueChange={selectByPriceHandler}>
+        <Select onValueChange={selectByPriceHandler} value={sortByPrice}>
           <SelectTrigger className="w-32 border border-gray-300 rounded-md shadow-sm hover:shadow-md transition duration-300">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
@@ -95,6 +116,7 @@ const Filter = ({ handleFilterChange }) => {
             >
               <Checkbox
                 id={category.id}
+                checked={selectedCategories.includes(category.id)}
                 onCheckedChange={() => handleCategoryChange(category.id)}
               />
               <Label
