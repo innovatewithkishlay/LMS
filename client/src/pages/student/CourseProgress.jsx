@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import Chatbot from "@/components/Chatbot/chatbot";
 import { motion } from "framer-motion";
+import AIButton from "@/components/AIButton"; // Import the AIButton component
 
 const CourseProgress = () => {
   const params = useParams();
@@ -321,36 +322,8 @@ const CourseProgress = () => {
         </div>
       </div>
 
-      {/* Chatbot Toggle Button */}
-      <motion.button
-        onClick={toggleChatbot}
-        className="fixed bottom-4 right-4 p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all"
-        whileHover={{ scale: 1.1 }} // Framer Motion hover animation
-        whileTap={{ scale: 0.9 }} // Framer Motion tap animation
-      >
-        <div className="flex items-center justify-center space-x-2">
-          <span className="text-lg font-semibold">AI</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 20.25c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 9.75l-3 3-3-3"
-            />
-          </svg>
-        </div>
-      </motion.button>
+      {/* AI Button */}
+      <AIButton onClick={toggleChatbot} />
 
       {/* Chatbot Sidebar */}
       <Chatbot isOpen={isChatbotOpen} onClose={() => setIsChatbotOpen(false)} />
