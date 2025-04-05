@@ -28,7 +28,7 @@ app.use(
 
 // Apply express.json() globally for all routes except /webhook
 app.use((req, res, next) => {
-  if (req.originalUrl === "/api/v1/purchase/webhook") {
+  if (req.originalUrl.startsWith("/api/v1/purchase/webhook")) {
     next();
   } else {
     express.json()(req, res, next);
@@ -41,6 +41,7 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/purchase", purchaseRoute);
 app.use("/api/v1/progress", courseProgressRoute);
+// app.use("/api/v1/course-purchase", purchaseRoute);
 
 // Start the server
 app.listen(PORT, () => {

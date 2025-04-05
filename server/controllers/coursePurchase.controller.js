@@ -87,6 +87,10 @@ export const stripeWebhook = async (req, res) => {
     const sig = req.headers["stripe-signature"];
     const secret = process.env.WEBHOOK_ENDPOINT_SECRET;
 
+    console.log("Received webhook payload:", payload);
+    console.log("Received signature:", sig);
+
+    // Verify the Stripe webhook signature
     event = stripe.webhooks.constructEvent(payload, sig, secret);
     console.log("Webhook event received:", event.type);
 
@@ -94,10 +98,12 @@ export const stripeWebhook = async (req, res) => {
       console.log("Processing checkout.session.completed event");
 
       const session = event.data.object;
-
       const { courseId, userId } = session.metadata;
 
+      console.log("Session metadata:", { courseId, userId });
+
       try {
+        // Update the purchase status to "completed"
         const purchase = await CoursePurchase.findOneAndUpdate(
           { paymentId: session.id },
           { status: "completed" },
@@ -111,19 +117,31 @@ export const stripeWebhook = async (req, res) => {
 
         console.log("Purchase updated to completed:", purchase);
 
+        // Add the course to the user's enrolledCourses
         const updatedUser = await User.findByIdAndUpdate(
           userId,
           { $addToSet: { enrolledCourses: courseId } },
           { new: true }
         );
 
+        if (!updatedUser) {
+          console.error("User not found for ID:", userId);
+          return res.status(404).json({ message: "User not found" });
+        }
+
         console.log("User updated with enrolled course:", updatedUser);
 
+        // Add the user to the course's enrolledStudents
         const updatedCourse = await Course.findByIdAndUpdate(
           courseId,
           { $addToSet: { enrolledStudents: userId } },
           { new: true }
         );
+
+        if (!updatedCourse) {
+          console.error("Course not found for ID:", courseId);
+          return res.status(404).json({ message: "Course not found" });
+        }
 
         console.log("Course updated with enrolled student:", updatedCourse);
       } catch (error) {

@@ -3,7 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export const SearchResult = ({ course }) => {
+export const SearchResult = ({ course, purchasedCourses = [] }) => {
+  const isPurchased = purchasedCourses.includes(course._id); // Check if the course is purchased
+
   return (
     <motion.div
       className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 w-[340px] h-[440px] mx-auto flex flex-col"
@@ -16,7 +18,7 @@ export const SearchResult = ({ course }) => {
         <img
           src={
             course.courseThumbnail ||
-            "https://via.placeholder.com/300x200?text=No+Image" 
+            "https://via.placeholder.com/300x200?text=No+Image"
           }
           alt={course.courseTitle || "Course Thumbnail"}
           className="w-full h-44 object-contain bg-gray-200"
@@ -69,9 +71,15 @@ export const SearchResult = ({ course }) => {
           <h1 className="font-bold text-base text-blue-600">
             ₹{course.coursePrice || "0"}
           </h1>
-          <Link to={`/course-detail/${course._id}`}>
+          <Link
+            to={
+              isPurchased
+                ? `/continue-course/${course._id}`
+                : `/course-detail/${course._id}`
+            }
+          >
             <button className="bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 transition duration-300 text-sm">
-              View Details
+              {isPurchased ? "Continue Course" : "Enroll Now"}
             </button>
           </Link>
         </div>
