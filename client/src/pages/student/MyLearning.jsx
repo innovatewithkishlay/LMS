@@ -15,10 +15,8 @@ const motivationalMessages = [
 const MyLearning = () => {
   const { data, isLoading } = useLoadUserQuery();
 
-  // Extract enrolled courses
   const myLearning = data?.user.enrolledCourses || [];
 
-  // Function to get a random motivational message
   const getRandomMessage = () => {
     return motivationalMessages[
       Math.floor(Math.random() * motivationalMessages.length)
@@ -50,7 +48,6 @@ const MyLearning = () => {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                   className="relative bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group"
                 >
-                  {/* Course Thumbnail */}
                   <div className="relative h-64 bg-gray-100 dark:bg-gray-700">
                     <img
                       src={course.courseThumbnail}
@@ -59,14 +56,12 @@ const MyLearning = () => {
                     />
                   </div>
 
-                  {/* Motivational Hover Effect */}
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <p className="text-white text-lg font-semibold text-center px-4">
                       {motivationalMessage}
                     </p>
                   </div>
 
-                  {/* Course Details */}
                   <div className="relative p-6 space-y-4 z-10">
                     <h2 className="font-bold text-xl text-gray-800 dark:text-white truncate">
                       {course.courseTitle}
@@ -75,10 +70,8 @@ const MyLearning = () => {
                       Dive into this course and continue your learning journey.
                     </p>
 
-                    {/* Continue Button */}
                     <button
                       onClick={() => {
-                        // Navigate to course progress page
                         window.location.href = `/course-progress/${course._id}`;
                       }}
                       className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 font-semibold"
@@ -98,7 +91,6 @@ const MyLearning = () => {
 
 export default MyLearning;
 
-// Skeleton component for loading state
 const MyLearningSkeleton = () => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
     {[...Array(6)].map((_, index) => (
