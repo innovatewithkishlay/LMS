@@ -38,9 +38,6 @@ const MyLearning = () => {
                       alt={course.courseTitle}
                       className="w-full h-full object-contain rounded-t-lg"
                     />
-                    <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-md">
-                      {course.courseLevel}
-                    </span>
                   </div>
 
                   {/* Course Details */}
