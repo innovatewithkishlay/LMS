@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // Import Framer Motion
+import { motion } from "framer-motion";
 
 const Course = ({ course, isPurchased, completionPercentage }) => {
   const navigate = useNavigate();
@@ -18,9 +18,9 @@ const Course = ({ course, isPurchased, completionPercentage }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }} // Initial state: invisible and slightly below
-      animate={{ opacity: 1, y: 0 }} // Final state: visible and in position
-      transition={{ duration: 0.5, ease: "easeOut" }} // Smooth transition
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800 transition-shadow duration-300 hover:shadow-xl"
     >
       <Card className="dark:bg-gray-800 bg-white">
