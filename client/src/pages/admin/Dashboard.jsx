@@ -14,7 +14,6 @@ import {
 } from "chart.js";
 import { motion } from "framer-motion";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -47,7 +46,6 @@ const Dashboard = () => {
 
   const totalSales = purchasedCourse.length;
 
-  // Prepare data for Chart.js
   const chartData = {
     labels: courseData.map((course) => course.name),
     datasets: [
@@ -85,15 +83,14 @@ const Dashboard = () => {
           font: {
             size: 14,
           },
-          usePointStyle: true, // Use dots instead of lines in the legend
-          padding: 20, // Add spacing between legend items
+          usePointStyle: true,
+          padding: 20,
         },
         onClick: (e, legendItem, legend) => {
-          // Custom behavior for toggling datasets
           const index = legendItem.datasetIndex;
           const chart = legend.chart;
           const meta = chart.getDatasetMeta(index);
-          meta.hidden = !meta.hidden; // Toggle visibility
+          meta.hidden = !meta.hidden;
           chart.update();
         },
       },
