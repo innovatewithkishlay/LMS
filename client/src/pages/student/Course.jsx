@@ -24,7 +24,6 @@ const Course = ({ course, isPurchased, completionPercentage }) => {
       className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800 transition-shadow duration-300 hover:shadow-xl"
     >
       <Card className="dark:bg-gray-800 bg-white">
-        {/* Course Thumbnail */}
         <div className="relative">
           <img
             src={course.courseThumbnail}
@@ -36,14 +35,11 @@ const Course = ({ course, isPurchased, completionPercentage }) => {
           </Badge>
         </div>
 
-        {/* Course Content */}
         <CardContent className="px-6 py-5 space-y-4">
-          {/* Course Title */}
           <h1 className="hover:underline font-extrabold text-xl truncate text-gray-800 dark:text-white">
             {course.courseTitle}
           </h1>
 
-          {/* Creator Info */}
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
               <AvatarImage
@@ -64,7 +60,6 @@ const Course = ({ course, isPurchased, completionPercentage }) => {
             </div>
           </div>
 
-          {/* Completion Percentage */}
           {isPurchased && completionPercentage !== undefined && (
             <div className="mb-4">
               <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
@@ -79,7 +74,6 @@ const Course = ({ course, isPurchased, completionPercentage }) => {
             </div>
           )}
 
-          {/* Course Price and Button */}
           <div className="flex items-center justify-between">
             {!isPurchased && (
               <span className="text-2xl font-bold text-gray-800 dark:text-white">
