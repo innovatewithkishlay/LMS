@@ -326,10 +326,9 @@ export const removeLecture = async (req, res) => {
       await deleteVideoFromCloudinary(lecture.publicId);
     }
 
-    // Remove the lecture reference from the associated course
     await Course.updateOne(
-      { lectures: lectureId }, // find the course that contains the lecture
-      { $pull: { lectures: lectureId } } // Remove the lectures id from the lectures array
+      { lectures: lectureId },
+      { $pull: { lectures: lectureId } }
     );
 
     return res.status(200).json({
