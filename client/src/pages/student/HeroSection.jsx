@@ -17,7 +17,6 @@ const HeroSection = () => {
     setSearchQuery("");
   };
 
-  // Dynamically set placeholder based on screen size
   const [placeholder, setPlaceholder] = useState("Search for courses...");
   useEffect(() => {
     const updatePlaceholder = () => {
