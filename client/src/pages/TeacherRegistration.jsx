@@ -3,33 +3,47 @@ import { motion } from "framer-motion";
 
 const TeacherRegistration = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    photo: null,
+    gender: "",
+    age: "",
     email: "",
     phone: "",
-    experience: "",
+    address: {
+      street1: "",
+      street2: "",
+      city: "",
+      state: "",
+      zip: "",
+    },
+    qualification: "",
+    teachingArea: "",
+    classes: "",
     subjects: "",
-    bio: "",
+    experience: "",
+    location: "",
+    referral: "",
+    comments: "",
     resume: null,
+    cv: null,
+    agree: false,
   });
 
   const [errors, setErrors] = useState({});
   const maxResumeSize = 2 * 1024 * 1024;
-  const availableSubjects = [
-    "Math",
-    "Science",
-    "English",
-    "Hindi",
-    "Social Studies",
-    "Computer Science",
-    "Biology",
-    "Physics",
-    "Chemistry",
-    "Economics",
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      address: { ...formData.address, [name]: value },
+    });
   };
 
   const handleFileChange = (e) => {
@@ -42,21 +56,29 @@ const TeacherRegistration = () => {
     }
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, photo: file });
+  };
+
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.name.trim()) newErrors.name = "Name is required.";
+    if (!formData.firstName.trim())
+      newErrors.firstName = "First name is required.";
+    if (!formData.lastName.trim())
+      newErrors.lastName = "Last name is required.";
+    if (!formData.gender) newErrors.gender = "Gender is required.";
+    if (!formData.age || isNaN(formData.age))
+      newErrors.age = "Valid age is required.";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
       newErrors.email = "Please enter a valid email address.";
     if (!formData.phone.match(/^\d+$/))
       newErrors.phone = "Phone number must contain only numbers.";
-    if (!formData.experience || formData.experience <= 0)
-      newErrors.experience = "Please enter valid teaching experience.";
-    if (!formData.subjects)
-      newErrors.subjects = "Please select at least one subject.";
-    if (!formData.bio.trim()) newErrors.bio = "Bio is required.";
     if (!formData.resume) newErrors.resume = "Please upload your resume.";
-
+    if (!formData.referral)
+      newErrors.referral = "Please select how you found about us.";
+    if (!formData.agree)
+      newErrors.agree = "You must agree to the terms and conditions.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -65,169 +87,485 @@ const TeacherRegistration = () => {
     e.preventDefault();
     if (validateForm()) {
       console.log(formData);
-      alert(
-        "Your registration has been submitted. Please wait for admin approval."
-      );
+      alert("Your registration has been submitted successfully.");
     }
   };
 
   return (
     <motion.div
-      className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white px-4"
+      className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 text-gray-800 px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
       {/* Title Section */}
       <motion.h1
-        className="text-4xl md:text-5xl font-extrabold mb-8 text-center bg-gradient-to-r from-yellow-400 via-red-500 to-purple-600 text-transparent bg-clip-text"
+        className="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Teacher Registration
+        Teacher's Registration Form
       </motion.h1>
       <motion.p
-        className="text-lg md:text-xl text-center max-w-2xl mb-12 text-gray-100"
+        className="text-base md:text-lg text-center max-w-2xl mb-8 text-gray-600"
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        Join our team of expert educators and help students achieve their goals.
-        Fill out the form below to apply.
+        Fill out the form carefully for registration.
       </motion.p>
 
       {/* Registration Form */}
       <motion.form
         onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-lg"
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.6 }}
       >
-        {/* Name */}
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Full Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none text-gray-800"
-            placeholder="Enter your full name"
-          />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+        {/* Personal Information */}
+        <h2 className="text-lg font-semibold mb-4">
+          Personal Information <span className="text-red-500">*</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-gray-700 mb-2">First Name</label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="Enter your first name"
+            />
+            {errors.firstName && (
+              <p className="text-red-500 text-sm">{errors.firstName}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2">Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="Enter your last name"
+            />
+            {errors.lastName && (
+              <p className="text-red-500 text-sm">{errors.lastName}</p>
+            )}
+          </div>
         </div>
 
-        {/* Email */}
+        {/* Recent Photo with Drag-and-Drop */}
         <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Email Address <span className="text-red-500">*</span>
+          <label className="block text-gray-700 mb-2">
+            Recent Photo <span className="text-red-500">*</span>
+          </label>
+          <div
+            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 focus-within:border-blue-500 flex flex-col items-center justify-center"
+            onClick={() => document.getElementById("photoInput").click()}
+            onDrop={(e) => {
+              e.preventDefault();
+              const file = e.dataTransfer.files[0];
+              setFormData({ ...formData, photo: file });
+            }}
+            onDragOver={(e) => e.preventDefault()}
+          >
+            <input
+              type="file"
+              id="photoInput"
+              name="photo"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="hidden"
+            />
+            {/* Upload Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-12 w-12 text-gray-400 mb-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4-4m0 0l-4 4m4-4v12"
+              />
+            </svg>
+            <p className="text-black font-semibold mb-2">Browse Files</p>
+            <p className="text-gray-500 text-sm">
+              Drag and drop your photo here
+            </p>
+          </div>
+          {errors.photo && (
+            <p className="text-red-500 text-sm">{errors.photo}</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-gray-700 mb-2">
+              Gender <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            >
+              <option value="" className="text-gray-400">
+                Please Select
+              </option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            {errors.gender && (
+              <p className="text-red-500 text-sm">{errors.gender}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-2">
+              Age <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="e.g., 23"
+            />
+            {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+          </div>
+        </div>
+
+        {/* Contact Information */}
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">
+            E-mail Address <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none text-gray-800"
-            placeholder="Enter your email"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            placeholder="example@example.com"
           />
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email}</p>
           )}
         </div>
-
-        {/* Phone */}
         <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Phone Number <span className="text-red-500">*</span>
+          <label className="block text-gray-700 mb-2">
+            Contact <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none text-gray-800"
-            placeholder="Enter your phone number"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            placeholder="(000) 000-0000"
           />
           {errors.phone && (
             <p className="text-red-500 text-sm">{errors.phone}</p>
           )}
         </div>
 
-        {/* Experience */}
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Teaching Experience (in years){" "}
-            <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="experience"
-            value={formData.experience}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none text-gray-800"
-            placeholder="Enter your teaching experience"
-          />
-          {errors.experience && (
-            <p className="text-red-500 text-sm">{errors.experience}</p>
-          )}
+        {/* Address Section */}
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2">Address</label>
+
+          {/* Street Address */}
+          <div className="mb-4">
+            <input
+              type="text"
+              name="street1"
+              value={formData.address.street1}
+              onChange={handleAddressChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="Street Address"
+            />
+          </div>
+
+          {/* Street Address Line 2 */}
+          <div className="mb-4">
+            <input
+              type="text"
+              name="street2"
+              value={formData.address.street2}
+              onChange={handleAddressChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="Street Address Line 2"
+            />
+          </div>
+
+          {/* City and State/Province */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <input
+                type="text"
+                name="city"
+                value={formData.address.city}
+                onChange={handleAddressChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                placeholder="City"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                name="state"
+                value={formData.address.state}
+                onChange={handleAddressChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                placeholder="State / Province"
+              />
+            </div>
+          </div>
+
+          {/* Postal/Zip Code */}
+          <div className="mb-4">
+            <input
+              type="text"
+              name="zip"
+              value={formData.address.zip}
+              onChange={handleAddressChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="Postal / Zip Code"
+            />
+          </div>
         </div>
 
-        {/* Subjects */}
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Subjects of Expertise <span className="text-red-500">*</span>
+        {/* Qualification and Teaching Preferences Section */}
+        <div className="mb-6">
+          {/* Qualification */}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Qualification</label>
+            <select
+              name="qualification"
+              value={formData.qualification}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            >
+              <option value="" className="text-gray-400">
+                Select Qualification
+              </option>
+              <option value="High School">High School</option>
+              <option value="Bachelor's Degree">Bachelor's Degree</option>
+              <option value="Master's Degree">Master's Degree</option>
+              <option value="PhD">PhD</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Classes You Can Teach */}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">
+              Classes You Can Teach
+            </label>
+            <select
+              name="classes"
+              value={formData.classes}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            >
+              <option value="" className="text-gray-400">
+                Select Classes
+              </option>
+              <option value="Primary">Primary</option>
+              <option value="Middle School">Middle School</option>
+              <option value="High School">High School</option>
+              <option value="Undergraduate">Undergraduate</option>
+              <option value="Postgraduate">Postgraduate</option>
+            </select>
+          </div>
+
+          {/* Subjects You Can Teach */}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">
+              Subjects You Can Teach
+            </label>
+            <select
+              name="subjects"
+              value={formData.subjects}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            >
+              <option value="" className="text-gray-400">
+                Select Subjects
+              </option>
+              <option value="Math">Math</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="History">History</option>
+              <option value="Geography">Geography</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Biology">Biology</option>
+              <option value="Economics">Economics</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Any Experience of Teaching */}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">
+              Any Experience of Teaching
+            </label>
+            <textarea
+              name="experience"
+              value={formData.experience}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+              placeholder="Describe your teaching experience (if any)"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        {/* How Did You Find About Us Section */}
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2">
+            How did you find about us? <span className="text-red-500">*</span>
           </label>
           <select
-            name="subjects"
-            value={formData.subjects}
+            name="referral"
+            value={formData.referral}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none text-gray-800"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
           >
-            <option value="">Select a subject</option>
-            {availableSubjects.map((subject) => (
-              <option key={subject} value={subject}>
-                {subject}
-              </option>
-            ))}
+            <option value="" className="text-gray-400">
+              Select an option
+            </option>
+            <option value="Ads">Ads</option>
+            <option value="Friend">Friend</option>
+            <option value="Internet">Internet</option>
+            <option value="Newspaper">Newspaper</option>
+            <option value="Other">Other</option>
           </select>
-          {errors.subjects && (
-            <p className="text-red-500 text-sm">{errors.subjects}</p>
+          {errors.referral && (
+            <p className="text-red-500 text-sm">{errors.referral}</p>
           )}
         </div>
 
-        {/* Bio */}
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
-            Short Bio <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none text-gray-800"
-            placeholder="Tell us about yourself"
-          ></textarea>
-          {errors.bio && <p className="text-red-500 text-sm">{errors.bio}</p>}
-        </div>
-
-        {/* Resume Upload */}
+        {/* Upload Resume */}
         <div className="mb-6">
-          <label className="block text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-gray-700 mb-1">
             Upload Your Resume (PDF/DOC) <span className="text-red-500">*</span>
           </label>
+          <p className="text-red-400 text-sm mb-2">Maximum file size: 2 MB</p>
           <input
             type="file"
             name="resume"
             accept=".pdf,.doc,.docx"
             onChange={handleFileChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none bg-white"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           />
           {errors.resume && (
             <p className="text-red-500 text-sm">{errors.resume}</p>
+          )}
+        </div>
+
+        {/* CV Upload Section */}
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2">
+            Upload Your CV <span className="text-red-500">*</span>
+          </label>
+          <div
+            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 focus-within:border-blue-500 flex flex-col items-center justify-center"
+            onClick={() => document.getElementById("cvInput").click()}
+            onDrop={(e) => {
+              e.preventDefault();
+              const file = e.dataTransfer.files[0];
+              if (file && file.size > maxResumeSize) {
+                setErrors({ ...errors, cv: "File size exceeds 2 MB." });
+              } else {
+                setFormData({ ...formData, cv: file });
+                setErrors({ ...errors, cv: null });
+              }
+            }}
+            onDragOver={(e) => e.preventDefault()}
+          >
+            <input
+              type="file"
+              id="cvInput"
+              name="cv"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file && file.size > maxResumeSize) {
+                  setErrors({ ...errors, cv: "File size exceeds 2 MB." });
+                } else {
+                  setFormData({ ...formData, cv: file });
+                  setErrors({ ...errors, cv: null });
+                }
+              }}
+              className="hidden"
+            />
+            {/* Upload Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-12 w-12 text-gray-400 mb-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4-4m0 0l-4 4m4-4v12"
+              />
+            </svg>
+            <p className="text-black font-semibold mb-2">Browse Files</p>
+            <p className="text-gray-500 text-sm">Drag and drop your CV here</p>
+          </div>
+          {errors.cv && <p className="text-red-500 text-sm">{errors.cv}</p>}
+        </div>
+
+        {/* Terms and Conditions Section */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-2">Terms and Conditions</h3>
+          <ol className="list-decimal list-inside text-gray-600 text-sm mb-4">
+            <li className="pl-2">
+              We only inform the registered teachers/tutors for any teaching
+              vacancy through phone call, or via email, SMS.
+            </li>
+            <li className="pl-2">
+              More details will be provided depending upon the teacher's
+              interest.
+            </li>
+            <li className="pl-2">
+              Every teacher/tutor will be charged 50% of his/her first month's
+              salary/tuition fees.
+            </li>
+          </ol>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="agree"
+              name="agree"
+              checked={formData.agree || false}
+              onChange={(e) =>
+                setFormData({ ...formData, agree: e.target.checked })
+              }
+              className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="agree" className="ml-2 text-gray-700">
+              I agree to the terms and conditions
+            </label>
+          </div>
+          {errors.agree && (
+            <p className="text-red-500 text-sm mt-2">{errors.agree}</p>
           )}
         </div>
 
