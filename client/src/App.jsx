@@ -16,6 +16,8 @@ import EditLecture from "./pages/admin/lecture/EditLecture";
 import CourseDetail from "./pages/student/CourseDetail";
 import CourseProgress from "./pages/student/CourseProgress";
 import SearchPage from "./pages/student/SearchPage";
+import RoleSelection from "./pages/RoleSelection";
+import TeacherRegistration from "./pages/TeacherRegistration";
 import { AdminRoute, ProtectedRoute } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -33,6 +35,14 @@ const appRouter = createBrowserRouter([
             <Courses />
           </>
         ),
+      },
+      {
+        path: "role-selection",
+        element: <RoleSelection />,
+      },
+      {
+        path: "teacher-registration",
+        element: <TeacherRegistration />,
       },
       {
         path: "login",
