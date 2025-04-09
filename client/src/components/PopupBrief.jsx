@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const PopupBrief = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
-    if (!hasVisited) {
+    // Show the popup when the user is on the default route ("/")
+    if (location.pathname === "/") {
       setIsVisible(true);
-      localStorage.setItem("hasVisited", "true");
     }
-  }, []);
+  }, [location]);
 
   const handleClose = () => {
     setIsVisible(false);
   };
 
-  const handleExploreCourses = () => {
+  const handleGetStarted = () => {
     setIsVisible(false);
-    navigate("/role-selection");
   };
 
   return (
@@ -74,12 +73,12 @@ const PopupBrief = () => {
               </li>
             </ul>
 
-            {/* Explore Courses Button */}
+            {/* Get Started Button */}
             <button
-              onClick={handleExploreCourses}
+              onClick={handleGetStarted}
               className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-lg shadow-md hover:opacity-90 transition-all duration-300 mb-4"
             >
-              Explore Courses
+              Get Started
             </button>
 
             {/* Additional Note */}

@@ -11,7 +11,6 @@ const Courses = () => {
     isError,
   } = useGetPublishedCourseQuery();
   const { data: purchasedData } = useGetPurchasedCoursesQuery();
-
   // Extract purchased course IDs
   const purchasedCourseIds =
     purchasedData?.purchasedCourses?.map((course) => course.courseId._id) || [];

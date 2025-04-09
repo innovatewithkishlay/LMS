@@ -21,6 +21,7 @@ import TeacherRegistration from "./pages/TeacherRegistration";
 import { AdminRoute, ProtectedRoute } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/ThemeProvider";
+import PopupBrief from "./components/PopupBrief"; // Import the Popup
 
 const appRouter = createBrowserRouter([
   {
@@ -28,21 +29,21 @@ const appRouter = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        path: "/",
+        path: "/", // Default route
+        element: <RoleSelection />,
+      },
+      {
+        path: "teacher-registration",
+        element: <TeacherRegistration />,
+      },
+      {
+        path: "hero-section",
         element: (
           <>
             <HeroSection />
             <Courses />
           </>
         ),
-      },
-      {
-        path: "role-selection",
-        element: <RoleSelection />,
-      },
-      {
-        path: "teacher-registration",
-        element: <TeacherRegistration />,
       },
       {
         path: "login",
@@ -137,7 +138,10 @@ function App() {
   return (
     <main>
       <ThemeProvider>
-        <RouterProvider router={appRouter} />
+        <RouterProvider router={appRouter}>
+          {/* Render the Popup inside the RouterProvider */}
+          <PopupBrief />
+        </RouterProvider>
       </ThemeProvider>
     </main>
   );

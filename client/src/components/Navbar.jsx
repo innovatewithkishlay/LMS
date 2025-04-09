@@ -48,7 +48,7 @@ const Navbar = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          onClick={() => navigate("/")} // Navigate to home page on click
+          onClick={() => navigate("/hero-section")}
         >
           <School size={30} className="text-blue-600 dark:text-blue-400" />
           <h1 className="font-extrabold text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
@@ -67,10 +67,10 @@ const Navbar = () => {
                     <AvatarImage
                       src={user.photoUrl}
                       alt="User Avatar"
-                      className="w-12 h-12 rounded-full object-cover" // Larger size for desktop
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                   ) : (
-                    <AvatarFallback size="laptop" /> // Larger fallback for desktop
+                    <AvatarFallback size="laptop" />
                   )}
                 </Avatar>
               </DropdownMenuTrigger>
@@ -153,7 +153,7 @@ const Navbar = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          onClick={() => navigate("/")} // Navigate to home page on click
+          onClick={() => navigate("/")}
         >
           V-Learning
         </motion.h1>
@@ -178,10 +178,10 @@ const MobileNavbar = ({ user, logoutHandler }) => {
                 <AvatarImage
                   src={user.photoUrl}
                   alt="User Avatar"
-                  className="w-10 h-10 rounded-full object-cover" // Smaller size for mobile
+                  className="w-10 h-10 rounded-full object-cover"
                 />
               ) : (
-                <AvatarFallback size="mobile" /> // Smaller fallback for mobile
+                <AvatarFallback size="mobile" />
               )}
             </Avatar>
           </DropdownMenuTrigger>
