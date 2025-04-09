@@ -8,7 +8,6 @@ const PopupBrief = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Show the popup when the user is on the default route ("/")
     if (location.pathname === "/") {
       setIsVisible(true);
     }
