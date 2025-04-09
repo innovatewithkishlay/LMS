@@ -74,7 +74,7 @@ const TeacherRegistration = () => {
       newErrors.email = "Please enter a valid email address.";
     if (!formData.phone.match(/^\d+$/))
       newErrors.phone = "Phone number must contain only numbers.";
-    if (!formData.resume) newErrors.resume = "Please upload your resume.";
+    if (!formData.cv) newErrors.cv = "Please upload your CV.";
     if (!formData.referral)
       newErrors.referral = "Please select how you found about us.";
     if (!formData.agree)
@@ -98,24 +98,6 @@ const TeacherRegistration = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Title Section */}
-      <motion.h1
-        className="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        Teacher's Registration Form
-      </motion.h1>
-      <motion.p
-        className="text-base md:text-lg text-center max-w-2xl mb-8 text-gray-600"
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
-        Fill out the form carefully for registration.
-      </motion.p>
-
       {/* Registration Form */}
       <motion.form
         onSubmit={handleSubmit}
@@ -124,6 +106,14 @@ const TeacherRegistration = () => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.6 }}
       >
+        {/* Title Section */}
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center text-gray-800">
+          Teacher's Registration Form
+        </h1>
+        <p className="text-sm md:text-base text-center mb-6 text-gray-600">
+          Fill out the form carefully for registration.
+        </p>
+
         {/* Personal Information */}
         <h2 className="text-lg font-semibold mb-4">
           Personal Information <span className="text-red-500">*</span>
@@ -174,33 +164,55 @@ const TeacherRegistration = () => {
             }}
             onDragOver={(e) => e.preventDefault()}
           >
-            <input
-              type="file"
-              id="photoInput"
-              name="photo"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="hidden"
-            />
-            {/* Upload Icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-gray-400 mb-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4-4m0 0l-4 4m4-4v12"
-              />
-            </svg>
-            <p className="text-black font-semibold mb-2">Browse Files</p>
-            <p className="text-gray-500 text-sm">
-              Drag and drop your photo here
-            </p>
+            {formData.photo ? (
+              <div className="flex flex-col items-center">
+                <img
+                  src={URL.createObjectURL(formData.photo)}
+                  alt="Uploaded"
+                  className="h-32 w-32 object-cover rounded-lg mb-2"
+                />
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, photo: null })}
+                  className="text-red-500 text-sm underline"
+                >
+                  Discard Photo
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="file"
+                  id="photoInput"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setFormData({ ...formData, photo: file });
+                  }}
+                  className="hidden"
+                />
+                {/* Upload Icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-gray-400 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4-4m0 0l-4 4m4-4v12"
+                  />
+                </svg>
+                <p className="text-black font-semibold mb-2">Browse Files</p>
+                <p className="text-gray-500 text-sm">
+                  Drag and drop your photo here
+                </p>
+              </>
+            )}
           </div>
           {errors.photo && (
             <p className="text-red-500 text-sm">{errors.photo}</p>
@@ -457,24 +469,6 @@ const TeacherRegistration = () => {
           )}
         </div>
 
-        {/* Upload Resume */}
-        <div className="mb-6">
-          <label className="block text-gray-700 mb-1">
-            Upload Your Resume (PDF/DOC) <span className="text-red-500">*</span>
-          </label>
-          <p className="text-red-400 text-sm mb-2">Maximum file size: 2 MB</p>
-          <input
-            type="file"
-            name="resume"
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          />
-          {errors.resume && (
-            <p className="text-red-500 text-sm">{errors.resume}</p>
-          )}
-        </div>
-
         {/* CV Upload Section */}
         <div className="mb-6">
           <label className="block text-gray-700 mb-2">
@@ -495,39 +489,58 @@ const TeacherRegistration = () => {
             }}
             onDragOver={(e) => e.preventDefault()}
           >
-            <input
-              type="file"
-              id="cvInput"
-              name="cv"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file && file.size > maxResumeSize) {
-                  setErrors({ ...errors, cv: "File size exceeds 2 MB." });
-                } else {
-                  setFormData({ ...formData, cv: file });
-                  setErrors({ ...errors, cv: null });
-                }
-              }}
-              className="hidden"
-            />
-            {/* Upload Icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-gray-400 mb-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4-4m0 0l-4 4m4-4v12"
-              />
-            </svg>
-            <p className="text-black font-semibold mb-2">Browse Files</p>
-            <p className="text-gray-500 text-sm">Drag and drop your CV here</p>
+            {formData.cv ? (
+              <div className="flex flex-col items-center">
+                <p className="text-black font-semibold mb-2">
+                  {formData.cv.name}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, cv: null })}
+                  className="text-red-500 text-sm underline"
+                >
+                  Discard File
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="file"
+                  id="cvInput"
+                  name="cv"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file && file.size > maxResumeSize) {
+                      setErrors({ ...errors, cv: "File size exceeds 2 MB." });
+                    } else {
+                      setFormData({ ...formData, cv: file });
+                      setErrors({ ...errors, cv: null });
+                    }
+                  }}
+                  className="hidden"
+                />
+                {/* Upload Icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-gray-400 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4-4m0 0l-4 4m4-4v12"
+                  />
+                </svg>
+                <p className="text-black font-semibold mb-2">Browse Files</p>
+                <p className="text-gray-500 text-sm">
+                  Drag and drop your CV here
+                </p>
+              </>
+            )}
           </div>
           {errors.cv && <p className="text-red-500 text-sm">{errors.cv}</p>}
         </div>
