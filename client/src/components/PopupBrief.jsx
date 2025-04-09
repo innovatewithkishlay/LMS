@@ -20,7 +20,7 @@ const PopupBrief = () => {
 
   const handleExploreCourses = () => {
     setIsVisible(false);
-    navigate("/course/search");
+    navigate("/role-selection");
   };
 
   return (
