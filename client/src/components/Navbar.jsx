@@ -145,20 +145,6 @@ const Navbar = () => {
           <DarkMode />
         </div>
       </div>
-
-      {/* Mobile */}
-      <div className="flex md:hidden items-center justify-between px-4 h-full">
-        <motion.h1
-          className="font-extrabold text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text cursor-pointer"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          onClick={() => navigate("/")}
-        >
-          V-Learning
-        </motion.h1>
-        <MobileNavbar user={user} logoutHandler={logoutHandler} />
-      </div>
     </motion.div>
   );
 };

@@ -99,7 +99,7 @@ const HeroSection = () => {
           >
             <Button
               onClick={() => navigate(`/course/search?query`)}
-              className="relative bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-4 rounded-full hover:shadow-lg hover:opacity-90 transition-all duration-300 text-lg font-semibold z-10 overflow-hidden"
+              className="relative bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-4 rounded-full hover:shadow-lg hover:opacity-90 transition-all duration-300 text-lg font-semibold z-0 overflow-hidden"
             >
               Explore Courses
               {/* Animated Line */}
