@@ -15,10 +15,9 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Determine the default tab based on the route
   const defaultTab = location.pathname === "/signup" ? "signup" : "login";
 
-  const [activeTab, setActiveTab] = useState(defaultTab); // Track the active tab
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [signupInput, setSignupInput] = useState({
     name: "",
     email: "",
@@ -26,8 +25,8 @@ const Login = () => {
   });
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
 
-  const [showSignupPassword, setShowSignupPassword] = useState(false); // Toggle for signup password
-  const [showLoginPassword, setShowLoginPassword] = useState(false); // Toggle for login password
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   const [
     registerUser,
@@ -66,7 +65,7 @@ const Login = () => {
   useEffect(() => {
     if (registerIsSuccess && registerData) {
       toast.success(registerData.message || "Signup successful.");
-      const redirectTo = location.state?.from || "/"; // Redirect to the previous page or home
+      const redirectTo = location.state?.from || "/hero-section";
       navigate(redirectTo);
     }
     if (registerError) {
@@ -74,7 +73,7 @@ const Login = () => {
     }
     if (loginIsSuccess && loginData) {
       toast.success(loginData.message || "Login successful.");
-      const redirectTo = location.state?.from || "/"; // Redirect to the previous page or home
+      const redirectTo = location.state?.from || "/hero-section";
       navigate(redirectTo);
     }
     if (loginError) {
