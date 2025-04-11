@@ -87,7 +87,7 @@ const TeacherRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => { 
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
@@ -642,22 +642,91 @@ const TeacherRegistration = () => {
 
       {/* Success Popup */}
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-xl font-bold mb-4">Thank You!</h2>
-            <p className="text-gray-700 mb-4">
-              Your registration has been submitted successfully. Our admin will
-              soon email you with your username and password.
-            </p>
-            <button
-              onClick={() => setShowPopup(false)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Close
-            </button>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full text-center">
+            <div className="flex flex-col items-center">
+              {/* Success Icon with Animated Tick */}
+              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4 relative">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-green-500 opacity-0 animate-fade-in"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4"
+                  />
+                </svg>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Registration Successful!
+              </h2>
+
+              {/* Detailed Message */}
+              <p className="text-gray-600 mb-6">
+                Thank you for registering as a teacher with us. Your application
+                has been successfully submitted. Our team will review your
+                details, and you will receive an email with your login
+                credentials shortly.
+              </p>
+
+              {/* Next Steps */}
+              <div className="text-left mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  What happens next?
+                </h3>
+                <ul className="list-disc list-inside text-gray-600 text-sm">
+                  <li>
+                    Our team will verify your submitted details and documents.
+                  </li>
+                  <li>
+                    You will receive an email with your username and password
+                    within 2-3 business days.
+                  </li>
+                  <li>
+                    Once approved, you can log in to your account and start
+                    exploring teaching opportunities.
+                  </li>
+                </ul>
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={() => setShowPopup(false)}
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow-md transition-all"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
+
+      {/* Inline Styles for Animation */}
+      <style>
+        {`
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+              transform: scale(0.8);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          .animate-fade-in {
+            animation: fade-in 0.8s ease-in-out forwards;
+          }
+        `}
+      </style>
     </motion.div>
   );
 };
