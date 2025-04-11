@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useRegisterTeacherMutation } from "../features/api/teacherRegistrationApi";
 
 const TeacherRegistration = () => {
   const [formData, setFormData] = useState({
@@ -25,13 +26,16 @@ const TeacherRegistration = () => {
     location: "",
     referral: "",
     comments: "",
-    resume: null,
     cv: null,
     agree: false,
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const maxResumeSize = 2 * 1024 * 1024;
+
+  const [registerTeacher] = useRegisterTeacherMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,11 +87,53 @@ const TeacherRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => { 
     e.preventDefault();
     if (validateForm()) {
-      console.log(formData);
-      alert("Your registration has been submitted successfully.");
+      setIsSubmitting(true);
+      const formDataToSend = new FormData();
+      formDataToSend.append("firstName", formData.firstName);
+      formDataToSend.append("lastName", formData.lastName);
+      formDataToSend.append("gender", formData.gender);
+      formDataToSend.append("age", formData.age);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("address[street1]", formData.address.street1);
+      formDataToSend.append("address[street2]", formData.address.street2);
+      formDataToSend.append("address[city]", formData.address.city);
+      formDataToSend.append("address[state]", formData.address.state);
+      formDataToSend.append("address[zip]", formData.address.zip);
+      formDataToSend.append("qualification", formData.qualification);
+      formDataToSend.append("teachingArea", formData.teachingArea);
+      formDataToSend.append("classes", formData.classes);
+      formDataToSend.append("subjects", formData.subjects);
+      formDataToSend.append("experience", formData.experience);
+      formDataToSend.append("location", formData.location);
+      formDataToSend.append("referral", formData.referral);
+      formDataToSend.append("comments", formData.comments);
+      formDataToSend.append("agree", formData.agree);
+      if (formData.photo) {
+        formDataToSend.append("photo", formData.photo);
+      }
+      if (formData.cv) {
+        formDataToSend.append("cv", formData.cv);
+      }
+
+      try {
+        const result = await registerTeacher(formDataToSend).unwrap();
+        if (result.success) {
+          console.log("Response from backend:", result.message);
+          setShowPopup(true);
+        } else {
+          console.error("Backend error:", result.message);
+          alert("Error: " + result.message);
+        }
+      } catch (error) {
+        console.error("Error submitting the form:", error);
+        alert("An error occurred while submitting the form. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -585,11 +631,33 @@ const TeacherRegistration = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all"
+          className={`bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg shadow-md transition-all ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+          }`}
+          disabled={isSubmitting}
         >
-          Submit Application
+          {isSubmitting ? "Submitting..." : "Submit Application"}
         </button>
       </motion.form>
+
+      {/* Success Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-xl font-bold mb-4">Thank You!</h2>
+            <p className="text-gray-700 mb-4">
+              Your registration has been submitted successfully. Our admin will
+              soon email you with your username and password.
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

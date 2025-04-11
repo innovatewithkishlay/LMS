@@ -70,7 +70,7 @@ export const authApi = createApi({
     })
 });
 export const {
-    useRegisterUserMutation,
+    useRegisterUserMutation,        
     useLoginUserMutation,
     useLogoutUserMutation,
     useLoadUserQuery,
