@@ -4,7 +4,7 @@ header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); 
 header("Content-Type: application/json");
 
-require_once "config.php";
+const GROQ_API_KEY = "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";
 
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     http_response_code(200);
