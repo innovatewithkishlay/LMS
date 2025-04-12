@@ -6,8 +6,10 @@ const Chatbot = ({ isOpen, onClose }) => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [width, setWidth] = useState(320);
   const messagesEndRef = useRef(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const isResizing = useRef(false);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -56,7 +58,6 @@ const Chatbot = ({ isOpen, onClose }) => {
 
   // Format the chatbot's response (no truncation)
   const formatResponse = (response) => {
-    // Replace **text** with <b>text</b> for bold formatting
     return response.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
   };
 
@@ -70,7 +71,32 @@ const Chatbot = ({ isOpen, onClose }) => {
   // Detect user scrolling
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
-    setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10); // Check if user is near the bottom
+    setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10);
+  };
+
+  // Handle resizing
+  const handleMouseDown = (e) => {
+    if (window.innerWidth >= 768) {
+      isResizing.current = true;
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isResizing.current) {
+      const newWidth = Math.min(
+        Math.max(320, window.innerWidth - e.clientX),
+        640
+      ); // Restrict width between 320px and 640px
+      setWidth(newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    isResizing.current = false;
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
   };
 
   useEffect(() => {
@@ -81,10 +107,20 @@ const Chatbot = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 z-50 h-full w-80 bg-white shadow-lg flex flex-col transform transition-transform duration-300 ${
+      className={`fixed top-0 right-0 z-50 h-full bg-white shadow-lg flex flex-col transform transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
+      style={{
+        width: `${width}px`, // Dynamic width
+        transition: isResizing.current ? "none" : "width 0.3s ease-in-out",
+      }}
     >
+      {/* Resizable Handle */}
+      <div
+        className="absolute top-0 left-0 h-full w-2 cursor-ew-resize bg-gray-300"
+        onMouseDown={handleMouseDown}
+      ></div>
+
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
         <h2 className="text-lg font-bold">AI Chatbot</h2>
@@ -97,10 +133,7 @@ const Chatbot = ({ isOpen, onClose }) => {
       </div>
 
       {/* Messages */}
-      <div
-        className="flex-1 overflow-y-auto p-4"
-        onScroll={handleScroll} // Track user scrolling
-      >
+      <div className="flex-1 overflow-y-auto p-4" onScroll={handleScroll}>
         {messages.map((message, index) => (
           <div
             key={index}
@@ -120,7 +153,7 @@ const Chatbot = ({ isOpen, onClose }) => {
             ></span>
           </div>
         ))}
-        <div ref={messagesEndRef} /> {/* Marker for the end of messages */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
