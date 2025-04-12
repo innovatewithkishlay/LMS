@@ -193,7 +193,7 @@ export const createTeacher = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: "instructor", // Set the role to instructor
+      role: "instructor",
     });
 
     return res.status(201).json({
