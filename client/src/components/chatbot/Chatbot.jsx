@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Chatbot = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([
@@ -6,19 +6,19 @@ const Chatbot = ({ isOpen, onClose }) => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message to the chat
     const newMessages = [...messages, { sender: "user", text: input }];
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
 
     try {
-      // Simulate API call to backend
       const response = await fetch("http://localhost:8000/chatbot.php", {
         method: "POST",
         headers: {
@@ -38,7 +38,8 @@ const Chatbot = ({ isOpen, onClose }) => {
           },
         ]);
       } else {
-        setMessages([...newMessages, { sender: "bot", text: data.reply }]);
+        const formattedReply = formatResponse(data.reply);
+        setMessages([...newMessages, { sender: "bot", text: formattedReply }]);
       }
     } catch (error) {
       setMessages([
@@ -52,6 +53,29 @@ const Chatbot = ({ isOpen, onClose }) => {
       setIsLoading(false);
     }
   };
+
+  // Format the chatbot's response (no truncation)
+  const formatResponse = (response) => {
+    // Replace **text** with <b>text</b> for bold formatting
+    return response.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+  };
+
+  // Auto-scroll to the latest message
+  const scrollToBottom = () => {
+    if (!isUserScrolling) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  // Detect user scrolling
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10); // Check if user is near the bottom
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   if (!isOpen) return null;
 
@@ -73,7 +97,10 @@ const Chatbot = ({ isOpen, onClose }) => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div
+        className="flex-1 overflow-y-auto p-4"
+        onScroll={handleScroll} // Track user scrolling
+      >
         {messages.map((message, index) => (
           <div
             key={index}
@@ -87,11 +114,13 @@ const Chatbot = ({ isOpen, onClose }) => {
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
-            >
-              {message.text}
-            </span>
+              dangerouslySetInnerHTML={{
+                __html: message.text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>"),
+              }}
+            ></span>
           </div>
         ))}
+        <div ref={messagesEndRef} /> {/* Marker for the end of messages */}
       </div>
 
       {/* Input */}
