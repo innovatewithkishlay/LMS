@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const TEACHER_API = "https://lms-php1.onrender.com";
+const TEACHER_API = "http://localhost:8000";
 
 export const teacherRegistrationApi = createApi({
   reducerPath: "teacherRegistrationApi",

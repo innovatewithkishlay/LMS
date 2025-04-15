@@ -21,16 +21,13 @@ const Chatbot = ({ isOpen, onClose }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://lms-php1.onrender.com/chatbot.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message: input }),
-        }
-      );
+      const response = await fetch("http://localhost:8000/chatbot.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: input }),
+      });
 
       const data = await response.json();
 
