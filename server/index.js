@@ -36,6 +36,10 @@ app.use((req, res, next) => {
 });
 
 // APIs
+app.get("/", (req, res) => {
+  res.send("🎉 Backend is live!");
+});
+
 app.use("/api/v1/media", mediaRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
