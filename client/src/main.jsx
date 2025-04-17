@@ -10,9 +10,10 @@ import LoadingSpinner from "./components/LoadingSpinner";
 
 const Custom = ({ children }) => {
   const { isLoading } = useLoadUserQuery();
-  return <>{isLoading ? <LoadingSpinner/> : <>{children}</>}</>;
+  return <>{isLoading ? <LoadingSpinner /> : <>{children}</>}</>;
 };
 
+console.log("Initializing React root...");
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={appStore}>
