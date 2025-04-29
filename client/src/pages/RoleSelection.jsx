@@ -25,7 +25,6 @@ const RoleSelection = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {/* Title Section */}
         <motion.h1
           className="text-4xl md:text-5xl font-extrabold mb-8 text-center"
           initial={{ y: -50, opacity: 0 }}
@@ -47,7 +46,6 @@ const RoleSelection = () => {
           role to get started on your journey with our premium LMS platform.
         </motion.p>
 
-        {/* Buttons Section */}
         <motion.div
           className="space-y-4 w-full max-w-md"
           initial={{ scale: 0.9, opacity: 0 }}
@@ -68,7 +66,6 @@ const RoleSelection = () => {
           </button>
         </motion.div>
 
-        {/* Footer Section */}
         <motion.p
           className="text-sm text-gray-300 mt-12"
           initial={{ opacity: 0 }}

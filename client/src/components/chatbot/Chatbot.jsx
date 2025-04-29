@@ -30,7 +30,6 @@ const Chatbot = ({ isOpen, onClose }) => {
       });
 
       const data = await response.json();
-
       if (data.error) {
         setMessages([
           ...newMessages,
@@ -56,25 +55,21 @@ const Chatbot = ({ isOpen, onClose }) => {
     }
   };
 
-  // Format the chatbot's response (no truncation)
   const formatResponse = (response) => {
     return response.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
   };
 
-  // Auto-scroll to the latest message
   const scrollToBottom = () => {
     if (!isUserScrolling) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  // Detect user scrolling
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10);
   };
 
-  // Handle resizing
   const handleMouseDown = (e) => {
     if (window.innerWidth >= 768) {
       isResizing.current = true;
@@ -88,7 +83,7 @@ const Chatbot = ({ isOpen, onClose }) => {
       const newWidth = Math.min(
         Math.max(320, window.innerWidth - e.clientX),
         640
-      ); // Restrict width between 320px and 640px
+      );
       setWidth(newWidth);
     }
   };
@@ -111,11 +106,10 @@ const Chatbot = ({ isOpen, onClose }) => {
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
       style={{
-        width: `${width}px`, // Dynamic width
+        width: `${width}px`,
         transition: isResizing.current ? "none" : "width 0.3s ease-in-out",
       }}
     >
-      {/* Resizable Handle */}
       <div
         className="absolute top-0 left-0 h-full w-2 cursor-ew-resize bg-gray-300"
         onMouseDown={handleMouseDown}

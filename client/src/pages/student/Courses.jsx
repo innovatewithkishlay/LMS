@@ -32,7 +32,7 @@ const Courses = () => {
                 <Course
                   key={index}
                   course={course}
-                  isPurchased={purchasedCourseIds.includes(course._id)} // Check if the course is purchased
+                  isPurchased={purchasedCourseIds.includes(course._id)}
                 />
               ))}
         </div>

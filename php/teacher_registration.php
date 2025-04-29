@@ -20,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $age = $_POST['age'] ?? null;
         $email = $_POST['email'] ?? null;
         $phone = $_POST['phone'] ?? null;
+
+        if (!preg_match('/^\d{10}$/', $phone)) {
+            throw new Exception("Phone number must be exactly 10 digits.");
+        }
+
         $addressStreet1 = $_POST['address']['street1'] ?? null;
         $addressStreet2 = $_POST['address']['street2'] ?? null;
         $addressCity = $_POST['address']['city'] ?? null;
@@ -34,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $referral = $_POST['referral'] ?? null;
         $comments = $_POST['comments'] ?? null;
         $agree = isset($_POST['agree']) ? 1 : 0;
-
         $photoPath = null;
         $cvPath = null;
 
